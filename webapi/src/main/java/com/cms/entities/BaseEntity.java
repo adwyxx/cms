@@ -1,16 +1,14 @@
 package com.cms.entities;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.util.Date;
 
 public class BaseEntity implements Serializable {
-
+    private static final long serialVersionUID = 8641108338538325713L;
     //创建时间
     @Column(name="create_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
     //创建人
     @Column(name="creator")
@@ -18,6 +16,6 @@ public class BaseEntity implements Serializable {
 
     @Override
     public String toString() {
-        return super.toString();
+        return this.toString();
     }
 }

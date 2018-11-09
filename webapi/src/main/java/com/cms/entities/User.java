@@ -1,14 +1,12 @@
 package com.cms.entities;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name="users")
 public class User extends BaseEntity {
+
     //主键ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,10 +28,20 @@ public class User extends BaseEntity {
     private String mobile;
     //最后登录时间
     @Column(name="last_login_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTime;
     //最后登出时间
     @Column(name="last_logoff_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLogoffTime;
+
+    public User(Integer id,String logonName,String displayName,String password,String email,String mobile)
+    {
+        this.id=id;
+        this.logonName=logonName;
+        this.displayName=displayName;
+        this.password=password;
+        this.email=email;
+        this.mobile=mobile;
+    }
 }
