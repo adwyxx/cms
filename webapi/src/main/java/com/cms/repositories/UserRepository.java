@@ -2,6 +2,9 @@ package com.cms.repositories;
 
 import com.cms.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.io.Serializable;
 
 /**
  * @program: cms
@@ -9,6 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author: Leo
  * @create: 2018-11-06 16:59
  **/
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecificationExecutor, Serializable {
 
 }
