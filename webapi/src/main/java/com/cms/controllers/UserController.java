@@ -1,29 +1,27 @@
 package com.cms.controllers;
 
 import com.cms.entities.User;
-import com.cms.repositories.UserRepository;
+import com.cms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     /**
     * @description:  根据用户ID获取用户信息
     * @param id:用户id
     * @return:  用户信息
     * @author: Leo
-    * @date:
+    * @date: 2018/11/6
     **/
-    @RequestMapping(path = "getUser",method = RequestMethod.GET)
-    public User getUserById(Integer id)
+    @RequestMapping(path = "getUserById/{id}",method = RequestMethod.GET)
+    public User getUserById(@PathVariable("id") Integer id)
     {
-        return  userRepository.getOne(id);
+        return  userService.getByID(id);
     }
 
     /**
@@ -34,8 +32,47 @@ public class UserController {
     * @Date: 2018/11/6
     **/
     @RequestMapping(path = "add",method = RequestMethod.POST)
-    public User addUser(User user)
+    public User addUser(@RequestBody User user)
     {
-        return  user;
+        return userService.insert(user);
+    }
+
+    /**
+     * @Description: 根据用户名密码获取用户信息
+     * @param logonName :用户登录名
+     * @param password :用户密码
+     * @return:  用户信息
+     * @Author: Leo
+     * @Date: 2018/11/6
+     **/
+    @GetMapping("getUser")
+    public User getUser(@RequestParam("logonName") String logonName,@RequestParam("password") String password)
+    {
+        return userService.getByLogonNameAndPassword(logonName,password);
+    }
+
+    /**
+      * @description: 根据用户id删除用户
+      * @param id:用户ID
+      * @author Leo.W
+      * @date 2018/11/13 17:19
+     **/
+    @GetMapping("delete/{id}")
+    public void deleteById(@PathVariable("id") Integer id)
+    {
+        userService.deleteById(id);
+    }
+
+    /**
+    * @description : 验证用户登录名是否存在
+    * @param logonName: 用户登录名
+    * @author : Leo.W
+    * @date : 2018/11/13 17:32
+    * @return : 用户登录名是否存在
+    **/
+    @GetMapping("checkLogonName/{logonName}")
+    public boolean checkLogonName(@PathVariable("logonName") String logonName)
+    {
+        return userService.checkLogonName(logonName);
     }
 }

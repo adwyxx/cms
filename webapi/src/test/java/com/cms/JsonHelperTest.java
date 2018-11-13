@@ -20,6 +20,7 @@ public class JsonHelperTest {
     @Test
     public void SerializeObject() throws JsonProcessingException {
         User user = new User(1,"leo","Leo","123","leo@gmail.com","18801012424");
+
         String json = JsonHelper.SerializeObject(user);
         System.out.print(json);
     }

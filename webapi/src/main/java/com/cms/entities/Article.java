@@ -9,13 +9,14 @@ import javax.persistence.*;
  * @create: 2018-11-09 11:33
  **/
 @Entity
-@Table(name="Articles")
+@Table(name="articles")
 public class Article extends BaseEntity
 {
     private static final long serialVersionUID = 2596000399917960335L;
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id",nullable = false)
     private long id;
 
     @Column(name="category_id",nullable = false)

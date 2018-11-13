@@ -9,10 +9,11 @@ import javax.persistence.*;
  * @create: 2018-11-09 11:19
  **/
 @Entity
-@Table(name = "Roles")
+@Table(name = "roles")
 public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id",nullable = false)
     private Integer id;
 
     @Column(name = "role_name",nullable = false)
