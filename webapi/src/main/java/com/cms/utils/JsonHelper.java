@@ -1,12 +1,10 @@
 package com.cms.utils;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+
 
 /**
  * @program: webapi
@@ -16,11 +14,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  **/
 public class JsonHelper
 {
-    private static ObjectMapper defaultMapper= new ObjectMapper()
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)  //类级别的设置，JsonInclude.Include.NON_EMPTY标识只有非NULL的值才会被纳入json string之中，其余的都将被忽略
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES) //禁止使用出现未知属性之时，抛出异常
-            .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
-            .setPropertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE);//转化后的json的key命名格式
+    public static SerializerFeature[] defaultSerializerFeature = new SerializerFeature[]{
+            SerializerFeature.DisableCircularReferenceDetect,//消除对同一对象循环引用的问题，默认为false（如果不配置有可能会进入死循环）
+            SerializerFeature.WriteMapNullValue, //输出值为null的字段,默认为false
+            SerializerFeature.WriteNullListAsEmpty, //将值为null的list输出为[]
+            SerializerFeature.WriteNullBooleanAsFalse //将之为null的boolean类型输出为false
+    };
 
     /**
     * @description: 将对象序列化成Json字符串
@@ -29,33 +28,30 @@ public class JsonHelper
      * @author: Leo
     * @date: 2018/11/9
     **/
-    public static String SerializeObject(Object value) throws JsonProcessingException {
+    public static String SerializeObject(Object value){
         if(value==null) {
             return "null";
         }
-        return defaultMapper.writeValueAsString(value);
+        return JSON.toJSONString(value);
     }
 
     /**
     * @description:  将对象序列化成Json字符串
     * @param value:  对象
-    * @param mapper: ObjectMapper
+    * @param features: 序列化配置
     * @return: Json字符串
     * @author: Leo
     * @date: 2018/11/9
     **/
-    public static  String SerializeObject(Object value,ObjectMapper mapper) throws JsonProcessingException {
+    public static  String SerializeObject(Object value, SerializerFeature ...features) {
         if(value==null) {
             return "null";
         }
-        if(mapper==null)
+        if(features==null)
         {
-            return defaultMapper.writeValueAsString(value);
+            return JSON.toJSONString(value,defaultSerializerFeature);
         }
-        else
-        {
-            return mapper.writeValueAsString(value);
-        }
+        return JSON.toJSONString(value,features);
     }
     /**
     * @description: Json反序列化
@@ -69,6 +65,6 @@ public class JsonHelper
         if(json==null || json.isEmpty()) {
             return null;
         }
-        return defaultMapper.convertValue(json, new TypeReference<T>(){});
+        return JSON.parseObject(json, new TypeReference<T>(){});
     }
 }

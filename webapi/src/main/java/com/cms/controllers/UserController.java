@@ -1,6 +1,7 @@
 package com.cms.controllers;
 
 import com.cms.entities.User;
+import com.cms.model.ResponseResultModel;
 import com.cms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +20,12 @@ public class UserController {
     * @date: 2018/11/6
     **/
     @RequestMapping(path = "getUserById/{id}",method = RequestMethod.GET)
-    public User getUserById(@PathVariable("id") Integer id)
+    public ResponseResultModel getUserById(@PathVariable("id") Integer id)
     {
-        return  userService.getByID(id);
+        User user = userService.getByID(id);
+        ResponseResultModel model = new ResponseResultModel();
+        model.setStatus("sccess").setData(user.getDisplayName());
+        return model;
     }
 
     /**

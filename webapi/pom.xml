@@ -60,9 +60,9 @@
         </dependency>
         <!--增加JSON工具依赖-->
         <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.9.7</version>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.51</version>
         </dependency>
         <!--Lombok 是一种 Java™ 实用工具，可用来帮助开发人员消除 Java 的冗长-->
         <dependency>

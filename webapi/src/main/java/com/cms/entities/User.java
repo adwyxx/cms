@@ -1,9 +1,7 @@
 package com.cms.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -11,7 +9,6 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name="users")
-@JsonIgnoreProperties({ "handler","hibernateLazyInitializer" })
 public class User implements Serializable {
 
     private static final long serialVersionUID = -8253289635265741443L;
@@ -44,17 +41,17 @@ public class User implements Serializable {
 
     //最后登录时间
     @Column(name="last_login_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date lastLoginTime;
 
     //最后登出时间
     @Column(name="last_logoff_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date lastLogoffTime;
 
     //创建时间
     @Column(name="create_time")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createTime;
 
     //创建人
