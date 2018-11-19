@@ -24,7 +24,7 @@ public class UserController {
     {
         User user = userService.getByID(id);
         ResponseResultModel model = new ResponseResultModel();
-        model.setStatus("sccess").setData(user.getDisplayName());
+        model.setStatus("sccess").setData(user);
         return model;
     }
 

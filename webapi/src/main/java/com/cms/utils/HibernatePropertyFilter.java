@@ -24,7 +24,7 @@ public class HibernatePropertyFilter implements PropertyFilter {
     **/
     @Override
     public boolean apply(Object object, String name, Object value) {
-        if(value.getClass().equals(ByteBuddyInterceptor.class))
+        if(value!=null&&value.getClass().equals(ByteBuddyInterceptor.class))
         {
             return false;
         }

@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,12 +31,11 @@ public class FastJsonConverter {
         // 处理中文乱码问题
         fastMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
         fastConverter.setSupportedMediaTypes(fastMediaTypes);
-
+        fastConverter.setDefaultCharset(Charset.forName("UTF-8"));
         //设置日期格式
         config.setDateFormat("yyyy-MM-dd HH:mm:ss");
         //设置JSON序列化格式
         config.setSerializerFeatures(
-                SerializerFeature.PrettyFormat,
                 SerializerFeature.DisableCircularReferenceDetect,//消除对同一对象循环引用的问题，默认为false（如果不配置有可能会进入死循环）
                 SerializerFeature.WriteMapNullValue, //输出值为null的字段,默认为false
                 SerializerFeature.WriteNullListAsEmpty, //将值为null的list输出为[]
@@ -44,6 +45,12 @@ public class FastJsonConverter {
         );
         config.setSerializeFilters(new HibernatePropertyFilter());
         fastConverter.setFastJsonConfig(config);
-        return new HttpMessageConverters(fastConverter);
+
+        //字符串类型的HTTP MESSAGE CONVERTER
+        StringHttpMessageConverter stringConverter = new StringHttpMessageConverter();
+        stringConverter.setDefaultCharset(Charset.forName("UTF-8"));
+        stringConverter.setSupportedMediaTypes(fastMediaTypes);
+
+        return new HttpMessageConverters(stringConverter,fastConverter);
     }
 }

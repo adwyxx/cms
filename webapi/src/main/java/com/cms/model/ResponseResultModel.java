@@ -16,6 +16,11 @@ public class ResponseResultModel implements Serializable {
     //请求成功后返回结果
     private Object data;
 
+    public ResponseResultModel()
+    {
+        this.status="sccuess";
+    }
+
     public String getStatus() {
         return status;
     }
