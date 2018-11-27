@@ -23,7 +23,7 @@ public class AuthUserService implements UserDetailsService {
         {
             throw new UsernameNotFoundException("用户名不存在");
         }
-        AuthUser authUser = new AuthUser(user.getLogonName(),user.getPassword());
+        AuthUser authUser = new AuthUser(user.getId(),user.getLogonName(),user.getPassword());
 
         return authUser;
     }

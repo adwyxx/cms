@@ -27,5 +27,4 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .allowCredentials(true) //是否允许证书 不再默认开启
                 .maxAge(3600);
     }
-
 }
