@@ -24,10 +24,10 @@ export default {
     login() {
       if (this.username != '' && this.password != '') {
         this.$post('',this.data).then(response=>{
-          
+          this.$router.push({path: '/management'})
         });
       }
     }
   }
-};
+}
 </script>
