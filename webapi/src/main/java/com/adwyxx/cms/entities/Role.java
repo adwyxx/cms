@@ -1,5 +1,6 @@
 package com.adwyxx.cms.entities;
 
+import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "roles")
 @Proxy(lazy = false)
+@Data
 public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
