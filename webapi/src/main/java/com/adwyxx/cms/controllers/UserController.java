@@ -1,10 +1,13 @@
 package com.adwyxx.cms.controllers;
 
 import com.adwyxx.cms.entities.User;
+import com.adwyxx.cms.model.PaginationDataModel;
 import com.adwyxx.cms.model.ResponseResultModel;
 import com.adwyxx.cms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -19,7 +22,7 @@ public class UserController {
     * @author: Leo
     * @date: 2018/11/6
     **/
-    @RequestMapping(path = "getUserById/{id}",method = RequestMethod.GET)
+    @RequestMapping(path = "/getUserById/{id}",method = RequestMethod.GET)
     public ResponseResultModel getUserById(@PathVariable("id") Integer id)
     {
         User user = userService.getByID(id);
@@ -35,7 +38,7 @@ public class UserController {
      * @Author: Leo
     * @Date: 2018/11/6
     **/
-    @RequestMapping(path = "add",method = RequestMethod.POST)
+    @RequestMapping(path = "/add",method = RequestMethod.POST)
     public User addUser(@RequestBody User user)
     {
         return userService.insert(user);
@@ -49,7 +52,7 @@ public class UserController {
      * @Author: Leo
      * @Date: 2018/11/6
      **/
-    @GetMapping("getUser")
+    @GetMapping("/getUser")
     public User getUser(@RequestParam("logonName") String logonName,@RequestParam("password") String password)
     {
         return userService.getByLogonNameAndPassword(logonName,password);
@@ -61,7 +64,7 @@ public class UserController {
       * @author Leo.W
       * @date 2018/11/13 17:19
      **/
-    @GetMapping("delete/{id}")
+    @GetMapping("/delete/{id}")
     public void deleteById(@PathVariable("id") Integer id)
     {
         userService.deleteById(id);
@@ -74,9 +77,22 @@ public class UserController {
     * @date : 2018/11/13 17:32
     * @return : 用户登录名是否存在
     **/
-    @GetMapping("checkLogonName/{logonName}")
+    @GetMapping("/checkLogonName/{logonName}")
     public boolean checkLogonName(@PathVariable("logonName") String logonName)
     {
         return userService.checkLogonName(logonName);
+    }
+
+    /**
+    * @description : 用户信息分页查询
+    * @param condition : 查询条件
+    * @author : Leo.W
+    * @date : 2018/12/18 15:45
+    * @return : 用户分页信息
+    **/
+    @PostMapping("/query")
+    public PaginationDataModel<User> query(@RequestBody Map<String,Object> condition)
+    {
+        return userService.getPagingData(condition);
     }
 }

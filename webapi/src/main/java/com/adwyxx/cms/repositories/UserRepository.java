@@ -32,4 +32,6 @@ public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecif
 
     @Query(value = "SELECT * FROM users WHERE logon_name=?1",nativeQuery = true)
     public  User getByLogonName(String userName);
+
+
 }

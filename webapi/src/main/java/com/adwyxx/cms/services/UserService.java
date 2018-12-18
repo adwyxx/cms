@@ -1,6 +1,9 @@
 package com.adwyxx.cms.services;
 
 import com.adwyxx.cms.entities.User;
+import com.adwyxx.cms.model.PaginationDataModel;
+
+import java.util.Map;
 
 public interface UserService {
 
@@ -15,4 +18,7 @@ public interface UserService {
     public void deleteById(Integer id);
 
     public boolean checkLogonName(String logonName);
+
+    public PaginationDataModel<User> getPagingData(Map<String,Object> condition);
+
 }
