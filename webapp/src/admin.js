@@ -1,8 +1,6 @@
-// The Vue build version to load with the `import` command
-// (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import App from './App'
-import router from './router/router'
+import Management from './Management'
+import router from './router/sysrouter'
 import ElementUI from 'element-ui' /* 引入全局element-ui */
 import 'element-ui/lib/theme-chalk/index.css' /* 引入全局element-ui样式 */
 import http from './utils/http'
@@ -15,10 +13,10 @@ Vue.prototype.$get = http.get
 Vue.prototype.$post = http.post
 /* eslint-disable no-new */
 new Vue({
-  el: '#app', // 这里参考admin.html和admin.vue的根节点id，保持三者一致
+  el: '#admin', // 这里参考admin.html和admin.vue的根节点id，保持三者一致
   router,
   components: {
-    App
+    Management
   },
-  template: '<App/>'
+  template: '<Management/>'
 })

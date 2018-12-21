@@ -1,3 +1,13 @@
 <template>
-    <footer>Copyright&copy;adwyxx@qq.com</footer>
+  <footer>Copyright&copy;{{copyright}}}</footer>
 </template>
+<script>
+export default {
+  name: 'Foot',
+  data () {
+    return {
+      copyright: 'adwyxx@qq.com'
+    }
+  }
+}
+</script>

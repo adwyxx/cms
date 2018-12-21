@@ -1,21 +1,21 @@
 'use strict'
 import Vue from 'vue'
-import http from './http'
+// import http from '@/utils/http'
 import VueCookie from 'vue-cookies'
 
 Vue.use(VueCookie)
 
 export default {
-  isAuthorized () {
+  isAuthorized: () => {
     return true
   },
-  getUser () {
+  getUser: () => {
     return {
       id: '',
       name: ''
     }
   },
-  getToken () {
-    
+  getToken: () => {
+
   }
 }

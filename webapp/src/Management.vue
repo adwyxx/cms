@@ -1,8 +1,20 @@
 <template>
-  <el-container id="Main"
+  <el-container id="admin"
                 direction="horizontal">
     <el-aside>
       <div class="logo">新闻管理系统</div>
+      <el-menu text-color="#0098fc"
+               active-text-color="#0098fc"
+               background-color="#0f2448">
+        <el-menu-item index="0"
+                      style="color:#0098fc;">
+          <i class="el-icon-star-off"
+             style="color:#0098fc;"></i>
+          <router-link :to="{name:'Welcome'}"
+                       slot="title"
+                       tag="span">桌面</router-link>
+        </el-menu-item>
+      </el-menu>
       <el-menu class="el-menu-vertical"
                @open="handleOpen"
                @close="handleClose"
@@ -30,22 +42,66 @@
                   direction="vertical">
       <el-header>Header</el-header>
       <el-main>
-        <router-view name="management" />
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
 </template>
+
+<script>
+export default {
+  name: 'Management',
+  data () {
+    return {
+      proviliges: []
+    }
+  },
+  created () {
+    this.getData()
+  },
+  methods: {
+    getData () {
+      var provis = [{
+        id: 1,
+        name: '系统管理',
+        route: '',
+        class: 'el-icon-setting',
+        children: [
+          { id: 11, name: '用户管理', route: '/management/user', class: 'el-icon-setting' },
+          { id: 12, name: '角色管理', route: '/management/role', class: 'el-icon-setting' }
+        ]
+      }, {
+        id: 2,
+        name: '文章管理',
+        route: '',
+        class: 'el-icon-setting',
+        children: [
+          { id: 21, name: '文章类别管理', route: '/management/articlecategory', class: 'el-icon-setting' },
+          { id: 22, name: '文章管理', route: '/management/articles', class: 'el-icon-setting' }
+        ]
+      }]
+      this.proviliges = provis
+    },
+    handleOpen (key, keyPath) {
+      console.log(key, keyPath)
+    },
+    handleClose (key, keyPath) {
+      console.log(key, keyPath)
+    }
+  }
+}
+</script>
+
 <style>
 body {
   margin: 0;
 }
-#Main {
-  position: relative;
+#admin {
   height: 100%;
 }
 #MainContainer {
-  position: relative;
   height: 100%;
+  position: relative;
 }
 .el-container {
   height: 100%;
@@ -54,8 +110,8 @@ body {
   background-color: #20375c;
   text-align: left;
   width: 200px !important;
-  position: fixed;
   height: 100%;
+  position: fixed;
   color: #c0ccda !important;
   top: 0;
   bottom: 0;
@@ -128,7 +184,6 @@ body {
 .el-main {
   background-color: #fff;
   text-align: center;
-  position: relative;
   height: 100%;
   min-height: 500px;
 }
@@ -139,47 +194,3 @@ body {
   line-height: 60px;
 }
 </style>
-
-<script>
-export default {
-  name: 'Main',
-  data () {
-    return {
-      proviliges: []
-    }
-  },
-  created () {
-    this.getData()
-  },
-  methods: {
-    getData () {
-      var provis = [{
-        id: 1,
-        name: '系统管理',
-        route: '',
-        class: 'el-icon-setting',
-        children: [
-          { id: 11, name: '用户管理', route: '/managment/user', class: 'el-icon-setting' },
-          { id: 12, name: '角色管理', route: '/managment/role', class: 'el-icon-setting' }
-        ]
-      }, {
-        id: 2,
-        name: '文章管理',
-        route: '',
-        class: 'el-icon-setting',
-        children: [
-          { id: 21, name: '文章类别管理', route: '/managment/articlecategory', class: 'el-icon-setting' },
-          { id: 22, name: '文章管理', route: '/managment/articles', class: 'el-icon-setting' }
-        ]
-      }]
-      this.proviliges = provis
-    },
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
-    }
-  }
-}
-</script>
