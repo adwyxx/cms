@@ -71,12 +71,12 @@ public class UserServiceImpl implements UserService {
 
         Map<String,Object> params = new HashMap<>();
         StringBuilder whereSql = new StringBuilder();
-        if(condition.containsKey("displayName") && null != condition.get("displayName")){
+        if(condition.containsKey("displayName") && null != condition.get("displayName") && !condition.get("displayName").equals("")){
             // 注意：条件中的displayName并不是表中的字段，而是User实体的属性字段
             whereSql.append(" AND displayName=:displayName ");
             params.put("displayName",condition.get("displayName"));
         }
-        if(condition.containsKey("logonName") && null != condition.get("logonName")){
+        if(condition.containsKey("logonName") && null != condition.get("logonName")&& !condition.get("logonName").equals("")){
             whereSql.append(" AND logonName=:logonName ");
             params.put("logonName",condition.get("logonName"));
         }

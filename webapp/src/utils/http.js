@@ -24,7 +24,7 @@ axios.interceptors.response.use(config => {
 const checkStatus = (response) => {
   // 如果http状态码正常，则直接返回数据
   if (response && (response.status === 200 || response.status === 304 || response.status === 400)) {
-    return response
+    return response.data
     // 如果不需要除了data之外的数据，可以直接 return response.data
   } else if (response.status === 401) {
     // 如果是401错误，跳转至登录页面
@@ -39,16 +39,30 @@ const checkStatus = (response) => {
   }
 }
 
+const XHRHttpRequestHeaders = {
+  'X-Requested-With': 'XMLHttpRequest',
+  'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+}
+const JsonHttpRequestHeaders = {
+  'Content-Type': 'application/json; charset=UTF-8'
+}
 export default {
   post: (url, data) => {
     return axios({
       method: 'POST',
       url,
+      data: data,
+      headers: JsonHttpRequestHeaders
+    }).then(function (response) {
+      return checkStatus(response)
+    })
+  },
+  postForXHR: (url, data) => {
+    return axios({
+      method: 'POST',
+      url,
       data: qs.stringify(data),
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      }
+      headers: XHRHttpRequestHeaders
     }).then(function (response) {
       return checkStatus(response)
     })
@@ -58,10 +72,17 @@ export default {
       method: 'GET',
       url,
       params,
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-      }
+      headers: JsonHttpRequestHeaders
+    }).then((response) => {
+      return checkStatus(response)
+    })
+  },
+  getForXHR: (url, params) => {
+    return axios({
+      method: 'GET',
+      url,
+      params,
+      headers: XHRHttpRequestHeaders
     }).then((response) => {
       return checkStatus(response)
     })

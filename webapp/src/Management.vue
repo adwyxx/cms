@@ -40,7 +40,24 @@
     </el-aside>
     <el-container id="MainContainer"
                   direction="vertical">
-      <el-header>Header</el-header>
+      <el-header>
+        <el-row style="margin:0px;padding:0px;">
+          <el-col :span="16"
+                  style="text-align:left;"> <i class="el-icon-time"></i>{{currentTime | foramteCnDate}}</el-col>
+          <el-col :span="8"
+                  style="text-align:right;">
+            <el-dropdown>
+              <span class="el-dropdown-link">
+                admin<i class="el-icon-arrow-down el-icon--right"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>修改密码</el-dropdown-item>
+                <el-dropdown-item divided>退出登陆</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </el-col>
+        </el-row>
+      </el-header>
       <el-main>
         <router-view />
       </el-main>
@@ -49,10 +66,13 @@
 </template>
 
 <script>
+import DateTimeFormater from '@/utils/dateTimeFormater'
+
 export default {
   name: 'Management',
   data () {
     return {
+      currentTime: new Date(),
       proviliges: []
     }
   },
@@ -88,6 +108,12 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
+  },
+  filters: {
+    foramteDateTime: DateTimeFormater.foramteDateTime,
+    foramteDate: DateTimeFormater.foramteDate,
+    foramteCnDate: DateTimeFormater.foramteCnDate,
+    foramteTime: DateTimeFormater.foramteTime
   }
 }
 </script>
@@ -95,6 +121,7 @@ export default {
 <style>
 body {
   margin: 0;
+  background-color: rgb(243, 244, 245);
 }
 #admin {
   height: 100%;
@@ -102,6 +129,7 @@ body {
 #MainContainer {
   height: 100%;
   position: relative;
+  margin-left: 200px;
 }
 .el-container {
   height: 100%;
@@ -182,15 +210,33 @@ body {
   height: 0px;
 }
 .el-main {
-  background-color: #fff;
+  background-color: rgb(243, 244, 245);
   text-align: center;
   height: 100%;
   min-height: 500px;
 }
 .el-header {
-  background-color: #b3c0d1;
+  background-color: #fff;
   text-align: center;
   height: 60px;
   line-height: 60px;
+}
+.el-row {
+  background-color: #fff;
+  padding: 5px;
+  /* margin-top: 5px;
+  margin-bottom: 5px; */
+}
+.el-breadcrumb {
+  margin-bottom: 15px;
+}
+.title {
+  text-align: left;
+  font-size: 14px;
+  height: 40px;
+  font-weight: bold;
+  line-height: 40px;
+  border-bottom: 1px solid #d1dbe5;
+  vertical-align: middle;
 }
 </style>
