@@ -3,13 +3,15 @@ package com.adwyxx.cms.services;
 import com.adwyxx.cms.entities.User;
 import com.adwyxx.cms.model.PaginationDataModel;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 public interface UserService {
 
     public User getByID(Integer id);
 
-    public User insert(User user);
+    public User insert(User user) throws NoSuchAlgorithmException, UnsupportedEncodingException;
 
     public void Save(User user);
 

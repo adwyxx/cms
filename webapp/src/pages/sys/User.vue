@@ -21,7 +21,8 @@
               style="text-align:left;">
         <el-button type="primary"
                    size="small"
-                   icon="el-icon-plus">新增</el-button>
+                   icon="el-icon-plus"
+                   @click="handleAdd()">新增</el-button>
       </el-col>
       <el-col :xs="12"
               :sm="12"
@@ -100,20 +101,64 @@
                    :page-size="condition.pageSize"
                    :total="total">
     </el-pagination>
+    <el-dialog title="用户信息"
+               :visible.sync="dialogFormVisible">
+      <el-form ref="form"
+               size="small"
+               :rules="rules"
+               :model="curretnUser">
+        <el-form-item label="姓名"
+                      prop="displayName"
+                      :label-width="formLabelWidth">
+          <el-input v-model="curretnUser.displayName"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="用户名"
+                      prop="logonName"
+                      :label-width="formLabelWidth">
+          <el-input v-model="curretnUser.logonName"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="电话"
+                      :label-width="formLabelWidth">
+          <el-input v-model="curretnUser.mobile"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱"
+                      :label-width="formLabelWidth">
+          <el-input v-model="curretnUser.email"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="reset()">取 消</el-button>
+          <el-button type="primary"
+                     @click="saveUser()">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
-
-<style>
-</style>
 
 <script>
 export default {
   name: 'User',
   data () {
     return {
+      dialogFormVisible: false,
+      saveModel: false,
+      formLabelWidth: '120px',
       userList: [],
       total: 0,
-      condition: { logonName: null, displayName: null, pageIndex: 1, pageSize: 20 }
+      condition: { logonName: null, displayName: null, pageIndex: 1, pageSize: 20 },
+      curretnUser: { displayName: null, logonName: null, password: null, mobile: null, email: null },
+      rules: {
+        displayName: [
+          { required: true, message: '请输入姓名', trigger: 'change' }
+        ],
+        logonName: [
+          { required: true, message: '请输入用户名', trigger: 'change' }
+        ]
+      }
     }
   },
   created () {
@@ -121,10 +166,38 @@ export default {
   },
   methods: {
     handleAdd () {
+      this.curretnUser = { displayName: null, logonName: null, password: null, mobile: null, email: null }
+      this.dialogFormVisible = true
+      this.saveModel = false
     },
     handleEdit (index, row) {
+      this.curretnUser = row
+      this.saveModel = true
+      this.dialogFormVisible = true
     },
     handleDelete (index, row) {
+      this.$confirm('确定要删除该用户吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$get('/users/delete/' + row.id).then(response => {
+          this.dialogFormVisible = false
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          })
+          this.loadData()
+        }, (error) => {
+          // this.$thows(error)
+          console.log(error)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
     },
     loadData () {
       this.$post('/users/query', this.condition).then(response => {
@@ -137,6 +210,36 @@ export default {
     query () {
       this.condition.pageIndex = 1
       this.loadData()
+    },
+    saveUser () {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          var url = '/users/add'
+          if (this.saveModel) {
+            url = '/users/save'
+          }
+          this.$post(url, this.curretnUser).then(response => {
+            this.dialogFormVisible = false
+            if (this.saveModel) {
+              this.loadData()
+            } else {
+              this.condition.logonName = null
+              this.condition.displayName = null
+              this.query()
+            }
+          }, (error) => {
+            // this.$thows(error)
+            console.log(error)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    reset () {
+      this.$refs['form'].resetFields()
+      this.dialogFormVisible = false
     }
   }
 }

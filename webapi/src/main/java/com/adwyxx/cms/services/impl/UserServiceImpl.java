@@ -4,11 +4,14 @@ import com.adwyxx.cms.entities.User;
 import com.adwyxx.cms.model.PaginationDataModel;
 import com.adwyxx.cms.repositories.UserRepository;
 import com.adwyxx.cms.services.UserService;
+import com.adwyxx.cms.utils.Md5Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +30,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User insert(User user) {
+    public User insert(User user) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+            user.setPassword(Md5Helper.EncoderByMd5("pass@123"));
         return userRepository.save(user);
     }
 
     @Override
     public void Save(User user) {
-        userRepository.save(user);
+        userRepository.updateUser(user.getId(),user.getDisplayName(),user.getLogonName(),user.getEmail(),user.getMobile());
     }
 
     @Override

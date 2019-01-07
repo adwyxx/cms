@@ -7,6 +7,8 @@ import com.adwyxx.cms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @RestController
@@ -39,9 +41,21 @@ public class UserController {
     * @Date: 2018/11/6
     **/
     @RequestMapping(path = "/add",method = RequestMethod.POST)
-    public User addUser(@RequestBody User user)
+    public User addUser(@RequestBody User user) throws NoSuchAlgorithmException, UnsupportedEncodingException
     {
         return userService.insert(user);
+    }
+
+    /**
+    * @description :更新用户信息
+    * @param user :用户信息
+    * @author : Leo.W
+    * @date : 2019/1/7 16:13
+    **/
+    @RequestMapping(path = "/update",method = RequestMethod.POST)
+    public void update(@RequestBody User user)
+    {
+        userService.Save(user);
     }
 
     /**
