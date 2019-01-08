@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.util.List;
 
@@ -33,8 +34,9 @@ public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecif
     @Query(value = "SELECT * FROM users WHERE logon_name=?1",nativeQuery = true)
     public  User getByLogonName(String userName);
 
-    @Query(value = "UPDATE users SET display_name=?2,logon_name=?3,email=?4,mobile=?5 WHERE id=?1", nativeQuery = true)
     @Modifying
+    @Transactional
+    @Query(value = "UPDATE users SET display_name=?2,logon_name=?3,email=?4,mobile=?5 WHERE id=?1", nativeQuery = true)
     public void updateUser(Integer id,String displayName,String logonName,String email,String mobile);
 
 }

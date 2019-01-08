@@ -117,6 +117,7 @@
                       prop="logonName"
                       :label-width="formLabelWidth">
           <el-input v-model="curretnUser.logonName"
+                    :disabled="saveModel"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="电话"
@@ -166,7 +167,7 @@ export default {
   },
   methods: {
     handleAdd () {
-      this.curretnUser = { displayName: null, logonName: null, password: null, mobile: null, email: null }
+      this.curretnUser = { displayName: null, logonName: null, password: null, mobile: null, email: null, createTime: new Date(), creator: 'system' }
       this.dialogFormVisible = true
       this.saveModel = false
     },
@@ -185,19 +186,20 @@ export default {
           this.dialogFormVisible = false
           this.$message({
             type: 'success',
+            duration: 1000,
             message: '删除成功!'
           })
           this.loadData()
         }, (error) => {
           // this.$thows(error)
+          this.$message({
+            showClose: true,
+            message: '哎呀呀，删除数据报错了！..(｡•ˇ‸ˇ•｡)…',
+            type: 'error'
+          })
           console.log(error)
         })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+      }).catch(() => { })
     },
     loadData () {
       this.$post('/users/query', this.condition).then(response => {
@@ -216,7 +218,7 @@ export default {
         if (valid) {
           var url = '/users/add'
           if (this.saveModel) {
-            url = '/users/save'
+            url = '/users/update'
           }
           this.$post(url, this.curretnUser).then(response => {
             this.dialogFormVisible = false
