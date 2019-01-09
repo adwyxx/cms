@@ -4,6 +4,7 @@ import com.adwyxx.cms.entities.User;
 import com.adwyxx.cms.model.PaginationDataModel;
 import com.adwyxx.cms.repositories.UserRepository;
 import com.adwyxx.cms.services.UserService;
+import com.adwyxx.cms.utils.EntityManagerHelper;
 import com.adwyxx.cms.utils.Md5Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,12 +88,12 @@ public class UserServiceImpl implements UserService {
 
         String countSql = countSelectSql.append(whereSql).toString();
         Query countQuery = this.entityManager.createQuery(countSql,Long.class);
-        this.setParameters(countQuery,params);
+        EntityManagerHelper.setParameters(countQuery,params);
         Long count = (Long) countQuery.getSingleResult();
 
         String querySql = selectSql.append(whereSql).toString();
         Query query = this.entityManager.createQuery(querySql,User.class);
-        this.setParameters(query,params);
+        EntityManagerHelper.setParameters(query,params);
 
         int startIndex =0,pageSize=10;
 
@@ -114,16 +115,5 @@ public class UserServiceImpl implements UserService {
         result.setTotal(count);
         entityManager.close();
         return result;
-    }
-
-    /**
-     * 给hql参数设置值
-     * @param query 查询
-     * @param params 参数
-     */
-    private void setParameters(Query query,Map<String,Object> params){
-        for(Map.Entry<String,Object> entry:params.entrySet()){
-            query.setParameter(entry.getKey(),entry.getValue());
-        }
     }
 }

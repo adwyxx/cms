@@ -4,6 +4,7 @@ import Auth from '@/utils/auth'
 import Login from '@/pages/Login'
 import User from '@/pages/sys/User'
 import Welcome from '@/pages/sys/Welcome'
+import Role from '@/pages/sys/Role'
 
 Vue.use(Router)
 
@@ -38,6 +39,14 @@ const routes = [{
   component: User,
   meta: {
     title: 'User',
+    requireAuth: true
+  }
+}, {
+  path: '/management/role',
+  name: 'Role',
+  component: Role,
+  meta: {
+    title: 'Role',
     requireAuth: true
   }
 }]

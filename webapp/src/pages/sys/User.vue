@@ -102,35 +102,40 @@
                    :total="total">
     </el-pagination>
     <el-dialog title="用户信息"
+               width="500px"
                :visible.sync="dialogFormVisible">
       <el-form ref="form"
                size="small"
+               label-width="100px"
                :rules="rules"
                :model="curretnUser">
         <el-form-item label="姓名"
-                      prop="displayName"
-                      :label-width="formLabelWidth">
+                      prop="displayName">
           <el-input v-model="curretnUser.displayName"
+                    suffix-icon="el-icon-star-off"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="用户名"
-                      prop="logonName"
-                      :label-width="formLabelWidth">
+                      prop="logonName">
           <el-input v-model="curretnUser.logonName"
                     :disabled="saveModel"
-                    autocomplete="off"></el-input>
+                    autocomplete="off"
+                    @blur="checkLogonName()">
+            <i slot="suffix"
+               :class="userNameSuffixIcon"></i>
+          </el-input>
         </el-form-item>
-        <el-form-item label="电话"
-                      :label-width="formLabelWidth">
+        <el-form-item label="电话">
           <el-input v-model="curretnUser.mobile"
+                    suffix-icon="el-icon-phone"
                     autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱"
-                      :label-width="formLabelWidth">
+        <el-form-item label="邮箱">
           <el-input v-model="curretnUser.email"
+                    suffix-icon="el-icon-message"
                     autocomplete="off"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label-width="0px">
           <el-button @click="reset()">取 消</el-button>
           <el-button type="primary"
                      @click="saveUser()">确 定</el-button>
@@ -146,8 +151,9 @@ export default {
   data () {
     return {
       dialogFormVisible: false,
+      userNameSuffixIcon: 'el-input__icon el-icon-view',
       saveModel: false,
-      formLabelWidth: '120px',
+      formLabelWidth: '100px',
       userList: [],
       total: 0,
       condition: { logonName: null, displayName: null, pageIndex: 1, pageSize: 20 },
@@ -167,6 +173,7 @@ export default {
   },
   methods: {
     handleAdd () {
+      this.userNameSuffixIcon = 'el-input__icon el-icon-view'
       this.curretnUser = { displayName: null, logonName: null, password: null, mobile: null, email: null, createTime: new Date(), creator: 'system' }
       this.dialogFormVisible = true
       this.saveModel = false
@@ -242,6 +249,33 @@ export default {
     reset () {
       this.$refs['form'].resetFields()
       this.dialogFormVisible = false
+    },
+    checkLogonName () {
+      if (this.curretnUser.logonName !== null && this.curretnUser.logonName !== '') {
+        this.userNameSuffixIcon = 'el-input__icon el-icon-loading'
+        this.$get('/users/checkLogonName/' + this.curretnUser.logonName).then(response => {
+          if (response === true) {
+            this.userNameSuffixIcon = 'el-input__icon el-icon-warning'
+            this.curretnUser.logonName = ''
+            this.$message({
+              showClose: true,
+              message: '该用户名已被占用，请更改用户名',
+              type: 'warning'
+            })
+          } else {
+            this.userNameSuffixIcon = 'el-input__icon el-icon-success'
+          }
+        }, (error) => {
+          this.userNameSuffixIcon = 'el-icon-error bg-error'
+          // this.$thows(error)
+          this.$message({
+            showClose: true,
+            message: '哎呀呀，报错了！..(｡•ˇ‸ˇ•｡)…',
+            type: 'error'
+          })
+          console.log(error)
+        })
+      }
     }
   }
 }
