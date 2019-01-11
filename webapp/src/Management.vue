@@ -239,4 +239,8 @@ body {
   border-bottom: 1px solid #d1dbe5;
   vertical-align: middle;
 }
+
+.el-dialog__header {
+  border-bottom: 1px solid #409eff;
+}
 </style>

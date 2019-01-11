@@ -2,10 +2,12 @@ package com.adwyxx.cms.controllers;
 
 import com.adwyxx.cms.entities.Role;
 import com.adwyxx.cms.model.PaginationDataModel;
+import com.adwyxx.cms.model.TreeNode;
 import com.adwyxx.cms.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,7 +33,7 @@ public class RoleController {
         this.service.add(role);
     }
 
-    @PostMapping("/delete/{id}")
+    @GetMapping("/delete/{id}")
     public void add(@PathVariable("id") Integer id)
     {
         this.service.delete(id);
@@ -47,5 +49,11 @@ public class RoleController {
     public PaginationDataModel<Role> query(@RequestBody Map<String,Object> condition)
     {
         return service.getPagingData(condition);
+    }
+
+    @GetMapping("/getproviliges/{id}")
+    public List<TreeNode> getProviliges(@PathVariable("id") Integer id)
+    {
+        return this.service.getRoleProviliges(id);
     }
 }

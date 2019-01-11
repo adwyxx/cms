@@ -32,7 +32,7 @@
               style="text-align:right;">
         <el-input placeholder="角色名称"
                   size="small"
-                  v-model="condition.logonName"
+                  v-model="condition.roleName"
                   class="input-with-select">
           <el-button slot="append"
                      icon="el-icon-search"
@@ -40,8 +40,8 @@
         </el-input>
       </el-col>
     </el-row>
-
-    <el-table :data="userList"
+    <!-- 角色列表 -->
+    <el-table :data="roleList"
               style="width: 100%">
       <el-table-column label="角色名称"
                        min-width="180">
@@ -52,6 +52,11 @@
       <el-table-column label="操作"
                        min-width="100">
         <template slot-scope="scope">
+          <el-button size="mini"
+                     type="primary"
+                     icon="el-icon-setting"
+                     circle
+                     @click="setProviliges(scope.$index, scope.row)"></el-button>
           <el-button size="mini"
                      type="primary"
                      icon="el-icon-edit"
@@ -72,6 +77,8 @@
                    :page-size="condition.pageSize"
                    :total="total">
     </el-pagination>
+    <!-- 角色列表 End -->
+    <!-- 角色信息编辑Dialog -->
     <el-dialog title="角色信息"
                width="500px"
                :visible.sync="dialogFormVisible">
@@ -79,10 +86,10 @@
                size="small"
                label-width="100px"
                :rules="rules"
-               :model="curretnUser">
+               :model="curretnRole">
         <el-form-item label="角色名称"
-                      prop="displayName">
-          <el-input v-model="curretnUser.displayName"
+                      prop="roleName">
+          <el-input v-model="curretnRole.roleName"
                     suffix-icon="el-icon-star-off"
                     autocomplete="off"
                     @blur="checkName()"></el-input>
@@ -94,6 +101,31 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+    <!-- 角色信息编辑Dialog End -->
+    <!-- 角色授权Dialog -->
+    <el-dialog itle="角色授权"
+               width="500px"
+               :visible.sync="dialogProviligeVisible">
+      <el-form>
+        <el-form-item>
+          <el-tree ref="proviligeForm"
+                   size="small"
+                   :data="currentRoleProviliges"
+                   show-checkbox
+                   node-key="id"
+                   default-expand-all="true"
+                   :default-checked-keys="defaultCheckedKeys"
+                   :props="defaultProps">
+          </el-tree>
+        </el-form-item>
+        <el-form-item label-width="0px">
+          <el-button @click="dialogProviligeVisible=false">取 消</el-button>
+          <el-button type="primary"
+                     @click="saveProviliges()">确 定</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
+    <!-- 角色授权Dialog End -->
   </div>
 </template>
 
@@ -103,19 +135,23 @@ export default {
   data () {
     return {
       dialogFormVisible: false,
+      dialogProviligeVisible: false,
       roleNameSuffixIcon: 'el-input__icon el-icon-view',
       saveModel: false,
       formLabelWidth: '100px',
-      userList: [],
+      roleList: [],
+      currentRoleProviliges: [],
+      defaultCheckedKeys: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
       total: 0,
-      condition: { logonName: null, displayName: null, pageIndex: 1, pageSize: 20 },
-      curretnUser: { displayName: null, logonName: null, password: null, mobile: null, email: null },
+      condition: { roleName: null, displayName: null, pageIndex: 1, pageSize: 20 },
+      curretnRole: { id: -1, roleName: null, createTime: null, creator: null },
       rules: {
-        displayName: [
-          { required: true, message: '请输入姓名', trigger: 'change' }
-        ],
-        logonName: [
-          { required: true, message: '请输入用户名', trigger: 'change' }
+        roleName: [
+          { required: true, message: '请输入角色名称', trigger: 'change' }
         ]
       }
     }
@@ -126,22 +162,22 @@ export default {
   methods: {
     handleAdd () {
       this.userNameSuffixIcon = 'el-input__icon el-icon-view'
-      this.curretnUser = { displayName: null, logonName: null, password: null, mobile: null, email: null, createTime: new Date(), creator: 'system' }
+      this.curretnRole = { id: -1, roleName: null, createTime: new Date(), creator: 'system' }
       this.dialogFormVisible = true
       this.saveModel = false
     },
-    handleEdit (index, row) {
-      this.curretnUser = row
+    handleEdit (index, role) {
+      this.curretnRole = role
       this.saveModel = true
       this.dialogFormVisible = true
     },
-    handleDelete (index, row) {
-      this.$confirm('确定要删除该用户吗?', '提示', {
+    handleDelete (index, role) {
+      this.$confirm('确定要删除该角色吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$get('/role/delete/' + row.id).then(response => {
+        this.$get('/role/delete/' + role.id).then(response => {
           this.dialogFormVisible = false
           this.$message({
             type: 'success',
@@ -162,7 +198,7 @@ export default {
     },
     loadData () {
       this.$post('/role/query', this.condition).then(response => {
-        this.userList = response.data
+        this.roleList = response.data
         this.total = response.total
       }, error => {
         console.log(error)
@@ -179,12 +215,12 @@ export default {
           if (this.saveModel) {
             url = '/role/update'
           }
-          this.$post(url, this.curretnUser).then(response => {
+          this.$post(url, this.curretnRole).then(response => {
             this.dialogFormVisible = false
             if (this.saveModel) {
               this.loadData()
             } else {
-              this.condition.logonName = null
+              this.condition.roleName = null
               this.condition.displayName = null
               this.query()
             }
@@ -203,15 +239,15 @@ export default {
       this.dialogFormVisible = false
     },
     checkName () {
-      if (this.curretnUser.logonName !== null && this.curretnUser.logonName !== '') {
+      if (this.curretnRole.roleName !== null && this.curretnRole.roleName !== '') {
         this.roleNameSuffixIcon = 'el-input__icon el-icon-loading'
-        this.$get('/role/checkName/' + this.curretnUser.logonName).then(response => {
+        this.$get('/role/checkName/' + this.curretnRole.roleName).then(response => {
           if (response === true) {
             this.roleNameSuffixIcon = 'el-input__icon el-icon-warning'
-            this.curretnUser.logonName = ''
+            this.curretnRole.roleName = ''
             this.$message({
               showClose: true,
-              message: '该用户名已被占用，请更改用户名',
+              message: '该角色名称已被占用，请更改角色名称',
               type: 'warning'
             })
           } else {
@@ -228,6 +264,24 @@ export default {
           console.log(error)
         })
       }
+    },
+    setProviliges (index, role) {
+      this.dialogProviligeVisible = true
+      this.currentRoleProviliges = []
+      this.$get('/role/getproviliges/' + role.id).then(response => {
+        this.currentRoleProviliges = response
+      }, (error) => {
+        // this.$thows(error)
+        this.$message({
+          showClose: true,
+          message: '哎呀呀，报错了！..(｡•ˇ‸ˇ•｡)…',
+          type: 'error'
+        })
+        console.log(error)
+      })
+    },
+    saveProviliges () {
+
     }
   }
 }

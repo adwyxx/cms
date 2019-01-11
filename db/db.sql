@@ -1,162 +1,178 @@
-# --------------------------------------------------------
-# Host:                         127.0.0.1
-# Server version:               8.0.13
-# Server OS:                    Win64
-# HeidiSQL version:             6.0.0.3603
-# Date/time:                    2018-11-08 13:47:24
-# --------------------------------------------------------
+/*
+ Navicat Premium Data Transfer
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+ Source Server         : localhost
+ Source Server Type    : MySQL
+ Source Server Version : 80013
+ Source Host           : localhost:3306
+ Source Schema         : cms_db
 
-# Dumping database structure for cms_db
-CREATE DATABASE IF NOT EXISTS `cms_db` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `cms_db`;
+ Target Server Type    : MySQL
+ Target Server Version : 80013
+ File Encoding         : 65001
 
+ Date: 11/01/2019 17:36:17
+*/
 
-# Dumping structure for table cms_db. role_privileages
-CREATE TABLE IF NOT EXISTS ` role_privileages` (
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for  role_proviliges
+-- ----------------------------
+DROP TABLE IF EXISTS ` role_proviliges`;
+CREATE TABLE ` role_proviliges`  (
   `role_id` int(10) NOT NULL,
   `menu_id` int(10) NOT NULL,
-  `create_time` datetime NOT NULL,
-  `creator` varchar(50) NOT NULL,
-  PRIMARY KEY (`role_id`,`menu_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `create_time` datetime(0) NULL,
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`role_id`, `menu_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping data for table cms_db. role_privileages: ~0 rows (approximately)
-/*!40000 ALTER TABLE ` role_privileages` DISABLE KEYS */;
-/*!40000 ALTER TABLE ` role_privileages` ENABLE KEYS */;
-
-
-# Dumping structure for table cms_db.access_token
-CREATE TABLE IF NOT EXISTS `access_token` (
-  `token` varchar(36) NOT NULL,
+-- ----------------------------
+-- Table structure for access_token
+-- ----------------------------
+DROP TABLE IF EXISTS `access_token`;
+CREATE TABLE `access_token`  (
+  `id` bigint(20) NOT NULL,
+  `token` blob NOT NULL,
   `user_id` int(11) NOT NULL,
+  `client_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `expiries` int(11) NOT NULL,
-  `create_time` datetime NOT NULL,
-  PRIMARY KEY (`token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `create_time` datetime(0) NULL,
+  `refresh_token` blob NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping data for table cms_db.access_token: ~0 rows (approximately)
-/*!40000 ALTER TABLE `access_token` DISABLE KEYS */;
-/*!40000 ALTER TABLE `access_token` ENABLE KEYS */;
-
-
-# Dumping structure for table cms_db.articles
-CREATE TABLE IF NOT EXISTS `articles` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-  `category_id` int(20) NOT NULL COMMENT '分类ID',
-  `author` varchar(50) DEFAULT NULL COMMENT '作者',
-  `title` varchar(50) NOT NULL COMMENT '标题',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `creator` varchar(50) NOT NULL COMMENT '创建人',
-  `content` text COMMENT '内容',
-  `hits` bigint(20) NOT NULL COMMENT '浏览次数',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# Dumping data for table cms_db.articles: ~0 rows (approximately)
-/*!40000 ALTER TABLE `articles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `articles` ENABLE KEYS */;
-
-
-# Dumping structure for table cms_db.article_categories
-CREATE TABLE IF NOT EXISTS `article_categories` (
+-- ----------------------------
+-- Table structure for article_categories
+-- ----------------------------
+DROP TABLE IF EXISTS `article_categories`;
+CREATE TABLE `article_categories`  (
   `id` int(10) NOT NULL COMMENT 'id',
-  `parent_id` int(11) DEFAULT NULL COMMENT '父级类别id',
-  `full_name` varchar(256) DEFAULT NULL COMMENT '类别全称',
+  `parent_id` int(11) NULL DEFAULT NULL COMMENT '父级类别id',
+  `full_name` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类别全称',
   `name` varbinary(50) NOT NULL COMMENT '名称',
   `sort_no` int(11) NOT NULL COMMENT '排序码',
-  `create_time` datetime NOT NULL COMMENT '创建时间',
-  `creator` varchar(50) NOT NULL COMMENT '创建人',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建人',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping data for table cms_db.article_categories: ~0 rows (approximately)
-/*!40000 ALTER TABLE `article_categories` DISABLE KEYS */;
-/*!40000 ALTER TABLE `article_categories` ENABLE KEYS */;
+-- ----------------------------
+-- Table structure for articles
+-- ----------------------------
+DROP TABLE IF EXISTS `articles`;
+CREATE TABLE `articles`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+  `category_id` int(20) NOT NULL COMMENT '分类ID',
+  `author` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '作者',
+  `title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '标题',
+  `create_time` datetime(0) NOT NULL COMMENT '创建时间',
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '创建人',
+  `content` text CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '内容',
+  `hits` bigint(20) NOT NULL COMMENT '浏览次数',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Table structure for auth_client
+-- ----------------------------
+DROP TABLE IF EXISTS `auth_client`;
+CREATE TABLE `auth_client`  (
+  `client_id` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `client_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`client_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping structure for table cms_db.menus
-CREATE TABLE IF NOT EXISTS `menus` (
+-- ----------------------------
+-- Table structure for auth_code
+-- ----------------------------
+DROP TABLE IF EXISTS `auth_code`;
+CREATE TABLE `auth_code`  (
+  `auth_code` varchar(36) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `create_time` datetime(0) NULL,
+  PRIMARY KEY (`auth_code`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for menus
+-- ----------------------------
+DROP TABLE IF EXISTS `menus`;
+CREATE TABLE `menus`  (
   `id` int(10) NOT NULL,
-  `menu_name` varchar(50) NOT NULL,
-  `url` varchar(256) NOT NULL,
+  `menu_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `url` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `sort_no` int(11) NOT NULL,
-  `create_time` datetime NOT NULL,
-  `creator` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `create_time` datetime(0) NULL,
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping data for table cms_db.menus: ~0 rows (approximately)
-/*!40000 ALTER TABLE `menus` DISABLE KEYS */;
-/*!40000 ALTER TABLE `menus` ENABLE KEYS */;
-
-
-# Dumping structure for table cms_db.roles
-CREATE TABLE IF NOT EXISTS `roles` (
-  `id` int(10) NOT NULL,
-  `role_name` varchar(50) NOT NULL,
-  `create_time` datetime NOT NULL,
-  `creator` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# Dumping data for table cms_db.roles: ~0 rows (approximately)
-/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
-
-
-# Dumping structure for table cms_db.role_users
-CREATE TABLE IF NOT EXISTS `role_users` (
+-- ----------------------------
+-- Table structure for role_users
+-- ----------------------------
+DROP TABLE IF EXISTS `role_users`;
+CREATE TABLE `role_users`  (
   `role_id` int(10) NOT NULL,
   `user_id` int(10) NOT NULL,
-  `create_time` datetime NOT NULL,
-  `creator` varchar(50) NOT NULL,
-  PRIMARY KEY (`role_id`,`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `create_time` datetime(0) NULL,
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`role_id`, `user_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping data for table cms_db.role_users: ~0 rows (approximately)
-/*!40000 ALTER TABLE `role_users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `role_users` ENABLE KEYS */;
+-- ----------------------------
+-- Table structure for roles
+-- ----------------------------
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE `roles`  (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `create_time` datetime(0) NULL,
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Records of roles
+-- ----------------------------
+INSERT INTO `roles` VALUES (1, '管理员', '2019-01-11 08:24:05', 'system');
 
-# Dumping structure for table cms_db.users
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(10) NOT NULL,
-  `logon_name` varchar(50) NOT NULL,
-  `display_name` varchar(50) NOT NULL,
-  `password` varchar(256) NOT NULL,
-  `email` varchar(256) DEFAULT NULL,
-  `mobile` varchar(20) DEFAULT NULL,
-  `last_login_time` datetime DEFAULT NULL,
-  `last_logoff_time` datetime DEFAULT NULL,
-  `create_time` datetime NOT NULL,
-  `creator` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# Dumping data for table cms_db.users: ~0 rows (approximately)
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` (`id`, `logon_name`, `display_name`, `password`, `email`, `mobile`, `last_login_time`, `last_logoff_time`, `create_time`, `creator`) VALUES
-	(1, 'admin', '管理员', 'admin888', NULL, NULL, NULL, NULL, '2018-11-06 14:09:38', 'system');
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-
-
-# Dumping structure for table cms_db.user_login_logs
-CREATE TABLE IF NOT EXISTS `user_login_logs` (
+-- ----------------------------
+-- Table structure for user_login_logs
+-- ----------------------------
+DROP TABLE IF EXISTS `user_login_logs`;
+CREATE TABLE `user_login_logs`  (
   `id` bigint(20) NOT NULL,
   `user_id` int(10) NOT NULL,
-  `login_time` datetime NOT NULL,
-  `ip_address` varchar(50) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `login_time` datetime(0) NULL,
+  `ip_address` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-# Dumping data for table cms_db.user_login_logs: ~0 rows (approximately)
-/*!40000 ALTER TABLE `user_login_logs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `user_login_logs` ENABLE KEYS */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+-- ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users`  (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `logon_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `display_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `password` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `email` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `mobile` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `last_login_time` datetime(0) NULL DEFAULT NULL,
+  `last_logoff_time` datetime(0) NULL DEFAULT NULL,
+  `create_time` datetime(0) NULL,
+  `creator` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of users
+-- ----------------------------
+INSERT INTO `users` VALUES (1, 'admin888', '管理员', 'admin888', 'admin@qq.com', '18811431212', NULL, NULL, '2018-11-06 20:11:00', 'system');
+INSERT INTO `users` VALUES (5, 'admin', 'admin', '3AZpjw4udXUVRUVYma3Mww==', 'adwyxx@163.com', '18811427070', NULL, NULL, '2019-01-08 09:17:36', 'system');
+
+SET FOREIGN_KEY_CHECKS = 1;

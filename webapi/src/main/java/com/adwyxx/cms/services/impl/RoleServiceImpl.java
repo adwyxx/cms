@@ -2,6 +2,7 @@ package com.adwyxx.cms.services.impl;
 
 import com.adwyxx.cms.entities.Role;
 import com.adwyxx.cms.model.PaginationDataModel;
+import com.adwyxx.cms.model.TreeNode;
 import com.adwyxx.cms.repositories.RoleRespository;
 import com.adwyxx.cms.services.RoleService;
 import com.adwyxx.cms.utils.EntityManagerHelper;
@@ -102,5 +103,10 @@ public class RoleServiceImpl implements RoleService {
         result.setTotal(count);
         entityManager.close();
         return result;
+    }
+
+    @Override
+    public List<TreeNode> getRoleProviliges(Integer roleId) {
+        return null;
     }
 }
