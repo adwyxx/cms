@@ -4,8 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Proxy;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -16,12 +15,21 @@ import java.util.Date;
  */
 @Data
 @Entity
-@Table(name = " role_proviliges")
+@Table(name = "role_proviliges")
 @Proxy(lazy = false)
 @NoArgsConstructor
 public class RoleProviliges extends BaseEntity implements Serializable {
     private static final long serialVersionUID = -2022180383915128163L;
+    //主键ID
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id",nullable = false)
+    private Integer id;
+
+    @Column(name="role_id",nullable = false)
     private Integer roleId;
+
+    @Column(name="menu_id",nullable = false)
     private Integer menuId;
 
     public RoleProviliges(Integer roleId, Integer menuId, String creator)

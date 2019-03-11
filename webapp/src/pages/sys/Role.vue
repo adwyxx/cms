@@ -130,6 +130,8 @@
 </template>
 
 <script>
+import * as roleApi from '@/api/sys/roleapi'
+
 export default {
   name: 'Role',
   data () {
@@ -177,7 +179,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$get('/role/delete/' + role.id).then(response => {
+        roleApi.deleteRole(role.id).then(response => {
           this.dialogFormVisible = false
           this.$message({
             type: 'success',
@@ -197,7 +199,7 @@ export default {
       }).catch(() => { })
     },
     loadData () {
-      this.$post('/role/query', this.condition).then(response => {
+      roleApi.queryRole(this.condition).then(response => {
         this.roleList = response.data
         this.total = response.total
       }, error => {
@@ -211,23 +213,35 @@ export default {
     save () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          var url = '/role/add'
           if (this.saveModel) {
-            url = '/role/update'
+            roleApi.addRole(this.curretnRole).then(response => {
+              this.dialogFormVisible = false
+              if (this.saveModel) {
+                this.loadData()
+              } else {
+                this.condition.roleName = null
+                this.condition.displayName = null
+                this.query()
+              }
+            }, (error) => {
+              // this.$thows(error)
+              console.log(error)
+            })
+          } else {
+            roleApi.updateRole(this.curretnRole).then(response => {
+              this.dialogFormVisible = false
+              if (this.saveModel) {
+                this.loadData()
+              } else {
+                this.condition.roleName = null
+                this.condition.displayName = null
+                this.query()
+              }
+            }, (error) => {
+              // this.$thows(error)
+              console.log(error)
+            })
           }
-          this.$post(url, this.curretnRole).then(response => {
-            this.dialogFormVisible = false
-            if (this.saveModel) {
-              this.loadData()
-            } else {
-              this.condition.roleName = null
-              this.condition.displayName = null
-              this.query()
-            }
-          }, (error) => {
-            // this.$thows(error)
-            console.log(error)
-          })
         } else {
           console.log('error submit!!')
           return false
@@ -241,7 +255,7 @@ export default {
     checkName () {
       if (this.curretnRole.roleName !== null && this.curretnRole.roleName !== '') {
         this.roleNameSuffixIcon = 'el-input__icon el-icon-loading'
-        this.$get('/role/checkName/' + this.curretnRole.roleName).then(response => {
+        roleApi.checkRoleName(this.curretnRole.roleName).then(response => {
           if (response === true) {
             this.roleNameSuffixIcon = 'el-input__icon el-icon-warning'
             this.curretnRole.roleName = ''
@@ -268,7 +282,7 @@ export default {
     setProviliges (index, role) {
       this.dialogProviligeVisible = true
       this.currentRoleProviliges = []
-      this.$get('/role/getproviliges/' + role.id).then(response => {
+      roleApi.getProviliges(role.id).then(response => {
         this.currentRoleProviliges = response
       }, (error) => {
         // this.$thows(error)

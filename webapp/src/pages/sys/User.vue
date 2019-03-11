@@ -146,6 +146,8 @@
 </template>
 
 <script>
+import * as userApi from '@/api/sys/userapi'
+
 export default {
   name: 'User',
   data () {
@@ -189,7 +191,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$get('/users/delete/' + row.id).then(response => {
+        userApi.deleteUser(row.id).then(response => {
           this.dialogFormVisible = false
           this.$message({
             type: 'success',
@@ -209,7 +211,7 @@ export default {
       }).catch(() => { })
     },
     loadData () {
-      this.$post('/users/query', this.condition).then(response => {
+      userApi.queryUsers(this.condition).then(response => {
         this.userList = response.data
         this.total = response.total
       }, error => {
@@ -223,23 +225,35 @@ export default {
     saveUser () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          var url = '/users/add'
           if (this.saveModel) {
-            url = '/users/update'
+            userApi.updateUser(this.curretnUser).then(response => {
+              this.dialogFormVisible = false
+              if (this.saveModel) {
+                this.loadData()
+              } else {
+                this.condition.logonName = null
+                this.condition.displayName = null
+                this.query()
+              }
+            }, (error) => {
+              // this.$thows(error)
+              console.log(error)
+            })
+          } else {
+            userApi.addUser(this.curretnUser).then(response => {
+              this.dialogFormVisible = false
+              if (this.saveModel) {
+                this.loadData()
+              } else {
+                this.condition.logonName = null
+                this.condition.displayName = null
+                this.query()
+              }
+            }, (error) => {
+              // this.$thows(error)
+              console.log(error)
+            })
           }
-          this.$post(url, this.curretnUser).then(response => {
-            this.dialogFormVisible = false
-            if (this.saveModel) {
-              this.loadData()
-            } else {
-              this.condition.logonName = null
-              this.condition.displayName = null
-              this.query()
-            }
-          }, (error) => {
-            // this.$thows(error)
-            console.log(error)
-          })
         } else {
           console.log('error submit!!')
           return false
@@ -253,7 +267,7 @@ export default {
     checkLogonName () {
       if (this.curretnUser.logonName !== null && this.curretnUser.logonName !== '') {
         this.userNameSuffixIcon = 'el-input__icon el-icon-loading'
-        this.$get('/users/checkLogonName/' + this.curretnUser.logonName).then(response => {
+        userApi.checkLogonName(this.curretnUser.logonName).then(response => {
           if (response === true) {
             this.userNameSuffixIcon = 'el-input__icon el-icon-warning'
             this.curretnUser.logonName = ''

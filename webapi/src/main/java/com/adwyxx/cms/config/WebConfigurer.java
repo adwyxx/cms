@@ -1,8 +1,14 @@
 package com.adwyxx.cms.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 /**
  * @Description: Web Configuration
@@ -11,6 +17,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class WebConfigurer implements WebMvcConfigurer {
+
+//    @Autowired
+//    private WebApiInterceptor webApiInterceptor;
 
     /**
     * @description : 全局跨域配置
@@ -27,4 +36,9 @@ public class WebConfigurer implements WebMvcConfigurer {
                 .allowCredentials(true) //是否允许证书 不再默认开启
                 .maxAge(3600);
     }
+
+//    @Override
+//    public void  addInterceptors(InterceptorRegistry registry) {
+//        registry.addInterceptor(webApiInterceptor).addPathPatterns("/**");
+//    }
 }

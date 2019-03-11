@@ -2,7 +2,7 @@ package com.adwyxx.cms.controllers;
 
 import com.adwyxx.cms.entities.User;
 import com.adwyxx.cms.model.PaginationDataModel;
-import com.adwyxx.cms.model.ResponseResultModel;
+import com.adwyxx.cms.model.ResponseModel;
 import com.adwyxx.cms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +25,9 @@ public class UserController {
     * @date: 2018/11/6
     **/
     @RequestMapping(path = "/getUserById/{id}",method = RequestMethod.GET)
-    public ResponseResultModel getUserById(@PathVariable("id") Integer id)
+    public User getUserById(@PathVariable("id") Integer id)
     {
-        User user = userService.getByID(id);
-        ResponseResultModel model = new ResponseResultModel();
-        model.setStatus("sccess").setData(user);
-        return model;
+        return userService.getByID(id);
     }
 
     /**
