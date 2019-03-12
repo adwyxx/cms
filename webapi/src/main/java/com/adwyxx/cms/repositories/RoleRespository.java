@@ -4,6 +4,7 @@ import com.adwyxx.cms.entities.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 
@@ -12,6 +13,7 @@ import java.io.Serializable;
  * @Auther: Leo.W
  * @Date: 2019/1/9 16:53
  */
+@Repository
 public interface RoleRespository extends JpaRepository<Role, Integer>, JpaSpecificationExecutor, Serializable {
     @Query(value = "SELECT COUNT(id) FROM roles WHERE role_name=?1", nativeQuery = true)
     public Integer checkName(String roleName);

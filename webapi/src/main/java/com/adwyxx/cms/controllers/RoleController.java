@@ -16,7 +16,7 @@ import java.util.Map;
  * @Date: 2019/1/9 17:02
  */
 @RestController
-@RequestMapping("/role")
+@RequestMapping("/sys/role")
 public class RoleController {
     @Autowired
     RoleService service;

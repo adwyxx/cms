@@ -43,10 +43,11 @@
 
     <el-table :data="dataList"
               style="width: 100%">
-
       <el-table-column label="标题"
                        min-width="250">
-        <span style="margin-left: 10px">{{ scope.row.title }}</span>
+        <template slot-scope="scope">
+          <span style="margin-left: 10px">{{ scope.row.title }}</span>
+        </template>
       </el-table-column>
       <el-table-column label="类别"
                        min-width="180">
@@ -91,26 +92,37 @@
                    :total="total">
     </el-pagination>
     <el-dialog title="文章信息"
-               width="500px"
+               width="80%"
                :visible.sync="dialogFormVisible">
       <el-form ref="form"
                size="small"
                label-width="100px"
+               style="text-align:left;"
                :rules="rules"
                :model="currentData">
         <el-form-item label="标题"
                       prop="title">
           <el-input v-model="currentData.title"
-                    suffix-icon="el-icon-star-off"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="类别"
                       prop="categoryId">
-
+          <el-select v-model="currentData.categoryId"
+                     @change="categoryChange"
+                     placeholder="请选择">
+            <el-option-group v-for="category in categorys"
+                             :key="category.id"
+                             :label="category.label">
+              <el-option v-for="item in category.children"
+                         :key="item.id"
+                         :label="item.label"
+                         :value="item.id">
+              </el-option>
+            </el-option-group>
+          </el-select>
         </el-form-item>
         <el-form-item label="作者">
           <el-input v-model="currentData.author"
-                    suffix-icon="el-icon-phone"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="内容"
@@ -123,7 +135,8 @@
                         @change="onEditorChange($event)">
           </quill-editor>
         </el-form-item>
-        <el-form-item label-width="0px">
+        <el-form-item label-width="0px"
+                      style="text-align:center;">
           <el-button @click="reset()">取 消</el-button>
           <el-button type="primary"
                      @click="saveData()">确 定</el-button>
@@ -134,7 +147,7 @@
 </template>
 
 <script>
-import * as articleApi from '@/api/article/articleapi'
+import * as articleApi from '@/api/sys/articleapi'
 import { quillEditor } from 'vue-quill-editor' // 调用编辑器
 import { quillRedefine } from 'vue-quill-editor-upload'
 import 'quill/dist/quill.core.css'
@@ -147,13 +160,13 @@ export default {
   data () {
     return {
       dialogFormVisible: false,
-      userNameSuffixIcon: 'el-input__icon el-icon-view',
       saveModel: false,
       formLabelWidth: '100px',
       dataList: [],
+      categorys: [],
       total: 0,
       condition: { title: null, pageIndex: 1, pageSize: 20 },
-      currentData: { id: null, title: null, author: null, categoryPath: null, categoryId: null, content: null, createTime: null, creator: null },
+      currentData: { id: null, title: null, author: null, categoryPath: null, categoryId: null, content: null, createTime: null, creator: null, hits: 0, validStatus: true, modifyTime: null, modifier: null },
       editorOption: {},
       rules: {
         title: [
@@ -169,55 +182,14 @@ export default {
     }
   },
   created () {
-    this.editorOption = quillRedefine(
-      {
-        // 图片上传的设置
-        uplpadConfig: {
-          action: '', // 必填参数 图片上传地址
-          // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
-          // 你必须把返回的数据中所包含的图片地址 return 回去
-          res: (respnse) => {
-            return respnse.info
-          },
-          methods: 'POST', // 可选参数 图片上传方式  默认为post
-          // token: sessionStorage.token, // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
-          name: 'img', // 可选参数 文件的参数名 默认为img
-          size: 500, // 可选参数   图片限制大小，单位为Kb, 1M = 1024Kb
-          accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon', // 可选参数 可上传的图片格式
-          // input点击事件  formData是提交的表单实体
-          change: (formData) => {
-          },
-          // 设置请求头 xhr: 异步请求， formData: 表单对象
-          header: (xhr, formData) => {
-            // xhr.setRequestHeader('myHeader','myValue');
-            // formData.append('token', '1234')
-          },
-          // 可选参数 接收一个函数 开始上传数据时会触发
-          start: () => {
-          },
-          // 可选参数 接收一个函数 上传数据完成（成功或者失败）时会触发
-          end: () => {
-          },
-          // 可选参数 接收一个函数 上传数据成功时会触发
-          success: () => {
-          },
-          // 可选参数 接收一个函数 上传数据中断时会触发
-          error: () => {
-          }
-        },
-        // 以下所有设置都和vue-quill-editor本身所对应
-        placeholder: '', // 可选参数 富文本框内的提示语
-        theme: '', // 可选参数 富文本编辑器的风格
-        toolOptions: [], // 可选参数  选择工具栏的需要哪些功能  默认是全部
-        handlers: {} // 可选参数 重定义的事件，比如link等事件
-      }
-    )
+    this.initEditor()
     this.loadData()
+    this.loadCategories()
   },
   methods: {
     handleAdd () {
       this.userNameSuffixIcon = 'el-input__icon el-icon-view'
-      this.currentData = { id: null, title: null, author: null, categoryPath: null, categoryId: null, content: null, createTime: new Date(), creator: 'system' }
+      this.currentData = { id: null, title: null, author: null, categoryPath: null, categoryId: null, content: null, createTime: new Date(), creator: 'system', hits: 0, validStatus: true, modifyTime: null, modifier: null }
       this.dialogFormVisible = true
       this.saveModel = false
     },
@@ -312,7 +284,76 @@ export default {
     // 获得焦点事件
     onEditorFocus () { },
     // 内容改变事件
-    onEditorChange () { }
+    onEditorChange () { },
+    // 加载类别数据
+    loadCategories () {
+      articleApi.getAllCategories().then(response => {
+        if (response) {
+          this.categorys = response
+        }
+      }, (error) => {
+        // this.$thows(error)
+        console.log(error)
+      })
+    },
+    // 类别选中事件
+    categoryChange (value) {
+      for (let i = 0, len = this.categorys.length; i < len; i++) {
+        var items = this.categorys[i].children
+        for (let j = 0, leng = items.length; j < leng; j++) {
+          if (items[j].id === value) {
+            this.currentData.categoryPath = items[j].fullPath
+            return
+          }
+        }
+      }
+    },
+    // 初始化富文本编辑器
+    initEditor () {
+      this.editorOption = quillRedefine(
+        {
+          // 图片上传的设置
+          uplpadConfig: {
+            action: '', // 必填参数 图片上传地址
+            // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
+            // 你必须把返回的数据中所包含的图片地址 return 回去
+            res: (respnse) => {
+              return respnse.info
+            },
+            methods: 'POST', // 可选参数 图片上传方式  默认为post
+            // token: sessionStorage.token, // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
+            name: 'img', // 可选参数 文件的参数名 默认为img
+            size: 500, // 可选参数   图片限制大小，单位为Kb, 1M = 1024Kb
+            accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon', // 可选参数 可上传的图片格式
+            // input点击事件  formData是提交的表单实体
+            change: (formData) => {
+            },
+            // 设置请求头 xhr: 异步请求， formData: 表单对象
+            header: (xhr, formData) => {
+              // xhr.setRequestHeader('myHeader','myValue');
+              // formData.append('token', '1234')
+            },
+            // 可选参数 接收一个函数 开始上传数据时会触发
+            start: () => {
+            },
+            // 可选参数 接收一个函数 上传数据完成（成功或者失败）时会触发
+            end: () => {
+            },
+            // 可选参数 接收一个函数 上传数据成功时会触发
+            success: () => {
+            },
+            // 可选参数 接收一个函数 上传数据中断时会触发
+            error: () => {
+            }
+          }
+          // 以下所有设置都和vue-quill-editor本身所对应
+          // placeholder: '', // 可选参数 富文本框内的提示语
+          // theme: '', // 可选参数 富文本编辑器的风格
+          // toolOptions: [], // 可选参数  选择工具栏的需要哪些功能  默认是全部
+          //  handlers: {} // 可选参数 重定义的事件，比如link等事件
+        }
+      )
+    }
   },
   computed: {
     editor () {

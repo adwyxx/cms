@@ -5,51 +5,68 @@ import Login from '@/pages/Login'
 import User from '@/pages/sys/User'
 import Welcome from '@/pages/sys/Welcome'
 import Role from '@/pages/sys/Role'
+import Article from '@/pages/sys/Article'
 
 Vue.use(Router)
 
-const routes = [{
-  path: '',
-  alias: 'welcom',
-  name: 'Welcome',
-  component: Welcome,
-  meta: {
-    title: 'Welcome',
-    requireAuth: true
+const routes = [
+  {
+    path: '',
+    alias: 'welcom',
+    name: 'Welcome',
+    component: Welcome,
+    meta: {
+      title: 'Welcome',
+      requireAuth: true
+    }
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+    meta: {
+      title: 'Login',
+      requireAuth: false
+    }
+  },
+  {
+    path: '/management',
+    name: 'Management',
+    component: Welcome,
+    meta: {
+      title: 'Management',
+      requireAuth: true
+    }
+  },
+  {
+    path: '/management/user',
+    name: 'User',
+    component: User,
+    meta: {
+      title: 'User',
+      requireAuth: true
+    }
+  },
+  {
+    path: '/management/role',
+    name: 'Role',
+    component: Role,
+    meta: {
+      title: 'Role',
+      requireAuth: true
+    }
+  },
+  {
+    path: '/management/article',
+    name: 'Article',
+    component: Article,
+    meta: {
+      title: 'Article',
+      requireAuth: true
+    }
   }
-}, {
-  path: '/login',
-  name: 'Login',
-  component: Login,
-  meta: {
-    title: 'Login',
-    requireAuth: false
-  }
-}, {
-  path: '/management',
-  name: 'Management',
-  component: Welcome,
-  meta: {
-    title: 'Management',
-    requireAuth: true
-  }
-}, {
-  path: '/management/user',
-  name: 'User',
-  component: User,
-  meta: {
-    title: 'User',
-    requireAuth: true
-  }
-}, {
-  path: '/management/role',
-  name: 'Role',
-  component: Role,
-  meta: {
-    title: 'Role',
-    requireAuth: true
-  }
-}]
+]
+
 const sysrouter = new Router({
   model: 'history',
   routes: routes

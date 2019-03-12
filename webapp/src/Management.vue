@@ -97,7 +97,7 @@ export default {
         class: 'el-icon-setting',
         children: [
           { id: 21, name: '文章类别管理', route: '/management/articlecategory', class: 'el-icon-setting' },
-          { id: 22, name: '文章管理', route: '/management/articles', class: 'el-icon-setting' }
+          { id: 22, name: '文章管理', route: '/management/article', class: 'el-icon-setting' }
         ]
       }]
       this.proviliges = provis

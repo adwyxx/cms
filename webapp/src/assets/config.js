@@ -5,24 +5,28 @@ const config = {
 config.api = {
   // 系统管理
   system: {
-    // 用户
-    userCheckLogonName: config.host + '/users/checkLogonName/',
-    userQuery: config.host + '/users/query',
-    userAdd: config.host + '/users/add',
-    userUpdate: config.host + '/users/update',
-    userDelete: config.host + '/users/delete/',
-    // 角色
-    roleQuery: config.host + '/role/query',
-    roleAdd: config.host + '/role/add',
-    roleUpdate: config.host + '/role/update',
-    roleDelete: config.host + '/role/delete/',
-    roleCheckName: config.host + '/role/checkName/',
-    roleGetProviliges: config.host + '/role/getproviliges/',
-    // 文章
-    articleQuery: config.host + '/article/query',
-    articleAdd: config.host + '/article/add',
-    articleUpdate: config.host + '/article/update',
-    articleDelete: config.host + '/article/delete/'
+    // 用户管理
+    userCheckLogonName: config.host + '/sys/users/checkLogonName/',
+    userQuery: config.host + '/sys/users/query',
+    userAdd: config.host + '/sys/users/add',
+    userUpdate: config.host + '/sys/users/update',
+    userDelete: config.host + '/sys/users/delete/',
+    // 角色管理
+    roleQuery: config.host + '/sys/role/query',
+    roleAdd: config.host + '/sys/role/add',
+    roleUpdate: config.host + '/sys/role/update',
+    roleDelete: config.host + '/sys/role/delete/',
+    roleCheckName: config.host + '/sys/role/checkName/',
+    roleGetProviliges: config.host + '/sys/role/getproviliges/',
+    // 文章管理
+    articleQuery: config.host + '/sys/article/query',
+    articleAdd: config.host + '/sys/article/add',
+    articleUpdate: config.host + '/sys/article/update',
+    articleDelete: config.host + '/sys/article/deleteById/',
+    articleGetTopArticles: config.host + '/sys/article/getTopArticles/',
+    articleGetTopArticlesByCategory:
+      config.host + '/sys/article/getTopArticlesByCategory/',
+    articleGetAllCategories: config.host + '/sys/article/getAllCategories'
   }
 }
 

@@ -17,3 +17,7 @@ export function update (data) {
 export function deleteById (id) {
   return Request.get(config.api.system.articleDelete + id)
 }
+// 获取文章类别
+export function getAllCategories (id) {
+  return Request.get(config.api.system.articleGetAllCategories)
+}

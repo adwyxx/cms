@@ -1,6 +1,6 @@
 package com.adwyxx.cms.repositories;
 
-import com.adwyxx.cms.entities.Menu;
+import com.adwyxx.cms.entities.ArticleCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -10,9 +10,9 @@ import java.io.Serializable;
 /**
  * @Description:
  * @Auther: Leo.W
- * @Date: 2019/1/11 17:30
+ * @Date: 2019/3/12 10:52
  */
 @Repository
-public interface MenuRespository extends JpaRepository<Menu, Integer>, JpaSpecificationExecutor, Serializable {
+public interface ArticleCategoryRepository extends JpaRepository<ArticleCategory, Integer>, JpaSpecificationExecutor, Serializable {
 
 }

@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/sys/users")
 public class UserController {
 
     @Autowired

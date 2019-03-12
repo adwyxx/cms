@@ -1,8 +1,11 @@
 package com.adwyxx.cms.entities;
 
+import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @program: webapi
@@ -10,20 +13,24 @@ import javax.persistence.*;
  * @author: Leo
  * @create: 2018-11-09 11:33
  **/
+@Data
 @Entity
 @Table(name="articles")
 @Proxy(lazy = false)
-public class Article extends BaseEntity
+public class Article extends BaseEntity implements Serializable
 {
-    private static final long serialVersionUID = 2596000399917960335L;
-    
+    private static final long serialVersionUID = 8865219347642176437L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable = false)
     private long id;
 
     @Column(name="category_id",nullable = false)
-    private Integer categoryId;
+    private int categoryId;
+
+    @Column(name="category_path",nullable = false)
+    private String categoryPath;
 
     @Column(name="title",nullable = false)
     private String title;
@@ -35,7 +42,16 @@ public class Article extends BaseEntity
     private String content;
 
     @Column(name="hits",nullable = false)
-    private Integer hits;
+    private int hits;
+
+    @Column(name="valid_status",nullable = false)
+    private boolean validStatus;
+
+    @Column(name="modify_time",nullable = false)
+    private Date modifyTime;
+
+    @Column(name="modifier",nullable = false)
+    private String modifier;
 
     public Article()
     {
