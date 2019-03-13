@@ -26,7 +26,10 @@ config.api = {
     articleGetTopArticles: config.host + '/sys/article/getTopArticles/',
     articleGetTopArticlesByCategory:
       config.host + '/sys/article/getTopArticlesByCategory/',
-    articleGetAllCategories: config.host + '/sys/article/getAllCategories'
+    articleGetAllCategories: config.host + '/sys/article/getAllCategories',
+    // 文件上传下载
+    fileUpload: config.host + '/file/upload',
+    fileDownload: config.host + '/file/download/' // /file/download/{id}
   }
 }
 

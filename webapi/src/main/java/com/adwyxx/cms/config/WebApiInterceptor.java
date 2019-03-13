@@ -1,8 +1,5 @@
 package com.adwyxx.cms.config;
 
-import com.adwyxx.cms.model.ErrorMsg;
-import com.alibaba.fastjson.JSON;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -19,9 +16,6 @@ import java.io.PrintWriter;
  */
 @Component
 public class WebApiInterceptor implements HandlerInterceptor {
-    @Autowired
-    private ResponseHolder responseHolder;
-
     /**
      * 进入对应的controller方法之前
      **/
@@ -43,13 +37,6 @@ public class WebApiInterceptor implements HandlerInterceptor {
      **/
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if(responseHolder == null){
-            responseHolder.setErrorMsg(ErrorMsg.SYSTEM_ERROR);
-        }
-        responseHolder.getModel();
-        String json = JSON.toJSONString(responseHolder.getModel());
-        this.returnJson(response,json);
-        responseHolder.clean();
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 

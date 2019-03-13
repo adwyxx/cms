@@ -62,7 +62,7 @@ export function post (url, params, hideErrorMsg) {
       .then(response => {
         closeLoading()
         response = response.data
-        if (response && response.status === 200) {
+        if (response && response.status === 'SUCCESS') {
           resolve(response.data)
         } else {
           console.log(response)
@@ -99,7 +99,7 @@ export function get (url, params, hideErrorMsg) {
       .then(response => {
         closeLoading()
         response = response.data
-        if (response && response.status === 200) {
+        if (response && response.status === 'SUCCESS') {
           resolve(response.data)
         } else {
           console.log(response)

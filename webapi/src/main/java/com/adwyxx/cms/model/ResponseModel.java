@@ -12,11 +12,8 @@ import java.util.Map;
  */
 public class ResponseModel implements Serializable {
     private static final long serialVersionUID = 7788978918244491761L;
-    public static final int SUCCESS = 200;
 
-    public static final int ERROR = 100;
-
-    private Integer status;
+    private ResponseStatus status;
 
     private String message;
 
@@ -25,13 +22,13 @@ public class ResponseModel implements Serializable {
     private Locale locale;
 
     public ResponseModel(){
-        this.status = SUCCESS;
+        this.status = ResponseStatus.SUCCESS;
         this.locale = Locale.CHINA;
     }
 
     public ResponseModel(Object data){
         this.data=data;
-        this.status = SUCCESS;
+        this.status = ResponseStatus.SUCCESS;
         this.locale = Locale.CHINA;
     }
 
@@ -53,23 +50,16 @@ public class ResponseModel implements Serializable {
         return this;
     }
 
-    public ResponseModel setErrorMsg(ErrorMsg errorMsg){
-        this.setStatus(errorMsg.getCode());
-        this.setMessage(errorMsg.getMessage());
-        return this;
-    }
-    public ResponseModel setStatus(int status){
+    public ResponseModel setStatus(ResponseStatus status) {
         this.status = status;
-        if(ERROR == status){
-            this.setMessage("系统错误");
-        }
         return this;
     }
     public ResponseModel setMessage(String message){
         this.message = message;
         return this;
     }
-    public int getStatus(){
+
+    public ResponseStatus getStatus() {
         return status;
     }
     public String getMessage(){

@@ -148,15 +148,18 @@
 
 <script>
 import * as articleApi from '@/api/sys/articleapi'
-import { quillEditor } from 'vue-quill-editor' // 调用编辑器
-import { quillRedefine } from 'vue-quill-editor-upload'
+import { quillEditor, Quill } from 'vue-quill-editor'
+import { container, ImageExtend, QuillWatch } from 'quill-image-extend-module'
+import config from '@/assets/config'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 
+Quill.register('modules/ImageExtend', ImageExtend)
+
 export default {
   name: 'Article',
-  components: { quillEditor, quillRedefine },
+  components: { quillEditor },
   data () {
     return {
       dialogFormVisible: false,
@@ -167,7 +170,6 @@ export default {
       total: 0,
       condition: { title: null, pageIndex: 1, pageSize: 20 },
       currentData: { id: null, title: null, author: null, categoryPath: null, categoryId: null, content: null, createTime: null, creator: null, hits: 0, validStatus: true, modifyTime: null, modifier: null },
-      editorOption: {},
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'change' }
@@ -178,11 +180,57 @@ export default {
         content: [
           { required: true, message: '请输入内容', trigger: 'change' }
         ]
+      },
+      editorOption: {
+        modules: {
+          ImageExtend: {
+            // 图片参数名
+            name: 'file',
+            // 可选参数 图片大小，单位为M，1M = 1024kb
+            size: 3,
+            // 服务器地址, 如果action为空，则采用base64插入图片
+            action: config.api.system.fileUpload,
+            // response 为一个函数用来获取服务器返回的具体图片地址
+            // 例如服务器返回{code: 200; data:{ url: 'baidu.com'}}则 return res.data.url
+            response: (res) => {
+              return res.data.url
+            },
+            // 可选参数 设置请求头部
+            headers: (xhr) => {
+              // xhr.setRequestHeader('Content-Type', 'multipart/form-data')
+            },
+            // 可选参数 自定义开始上传触发事件
+            sizeError: () => { },
+            // 可选参数 自定义开始上传触发事件
+            start: () => { },
+            // 可选参数 自定义上传结束触发的事件，无论成功或者失败
+            end: () => { },
+            // 可选参数 上传失败触发的事件
+            error: () => { },
+            // 可选参数  上传成功触发的事件
+            success: () => { },
+            // 可选参数 每次选择图片触发，也可用来设置头部，但比headers多了一个参数，可设置formData
+            change: (xhr, formData) => {
+              // xhr.setRequestHeader('myHeader','myValue')
+              // formData.append('token', 'myToken')
+            }
+          },
+          // 如果不上传图片到服务器，此处不必配置
+          toolbar: {
+            // container为工具栏，此次引入了全部工具栏，也可自行配置
+            container: container,
+            handlers: {
+              // 劫持原来的图片点击按钮事件
+              'image': function () {
+                QuillWatch.emit(this.quill.id)
+              }
+            }
+          }
+        }
       }
     }
   },
   created () {
-    this.initEditor()
     this.loadData()
     this.loadCategories()
   },
@@ -307,52 +355,6 @@ export default {
           }
         }
       }
-    },
-    // 初始化富文本编辑器
-    initEditor () {
-      this.editorOption = quillRedefine(
-        {
-          // 图片上传的设置
-          uplpadConfig: {
-            action: '', // 必填参数 图片上传地址
-            // 必选参数  res是一个函数，函数接收的response为上传成功时服务器返回的数据
-            // 你必须把返回的数据中所包含的图片地址 return 回去
-            res: (respnse) => {
-              return respnse.info
-            },
-            methods: 'POST', // 可选参数 图片上传方式  默认为post
-            // token: sessionStorage.token, // 可选参数 如果需要token验证，假设你的token有存放在sessionStorage
-            name: 'img', // 可选参数 文件的参数名 默认为img
-            size: 500, // 可选参数   图片限制大小，单位为Kb, 1M = 1024Kb
-            accept: 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon', // 可选参数 可上传的图片格式
-            // input点击事件  formData是提交的表单实体
-            change: (formData) => {
-            },
-            // 设置请求头 xhr: 异步请求， formData: 表单对象
-            header: (xhr, formData) => {
-              // xhr.setRequestHeader('myHeader','myValue');
-              // formData.append('token', '1234')
-            },
-            // 可选参数 接收一个函数 开始上传数据时会触发
-            start: () => {
-            },
-            // 可选参数 接收一个函数 上传数据完成（成功或者失败）时会触发
-            end: () => {
-            },
-            // 可选参数 接收一个函数 上传数据成功时会触发
-            success: () => {
-            },
-            // 可选参数 接收一个函数 上传数据中断时会触发
-            error: () => {
-            }
-          }
-          // 以下所有设置都和vue-quill-editor本身所对应
-          // placeholder: '', // 可选参数 富文本框内的提示语
-          // theme: '', // 可选参数 富文本编辑器的风格
-          // toolOptions: [], // 可选参数  选择工具栏的需要哪些功能  默认是全部
-          //  handlers: {} // 可选参数 重定义的事件，比如link等事件
-        }
-      )
     }
   },
   computed: {
