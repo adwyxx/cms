@@ -23,20 +23,23 @@ public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecif
 
     @Query(value = "UPDATE users SET password=?1 WHERE id=?2", nativeQuery = true)
     @Modifying
-    public void updatePassword(String password, int id);
+    void updatePassword(String password, int id);
 
     @Query(value = "SELECT * FROM users WHERE logon_name=?1 AND password=?2", nativeQuery = true)
-    public List<User> getByLogonNameAndPassword(String logonName, String password);
+    List<User> getByLogonNameAndPassword(String logonName, String password);
 
     @Query(value = "SELECT COUNT(id) FROM users WHERE logon_name=?1", nativeQuery = true)
-    public int checkLogonName(String logonName);
+    int checkLogonName(String logonName);
 
     @Query(value = "SELECT * FROM users WHERE logon_name=?1",nativeQuery = true)
-    public  User getByLogonName(String userName);
+     User getByLogonName(String userName);
 
     @Modifying
     @Transactional
     @Query(value = "UPDATE users SET display_name=?2,logon_name=?3,email=?4,mobile=?5 WHERE id=?1", nativeQuery = true)
-    public void updateUser(int id, String displayName, String logonName, String email, String mobile);
+    void updateUser(int id, String displayName, String logonName, String email, String mobile);
+
+    @Query(value = "SELECT u.* FROM users u WHERE EXISTS(SELECT t.id FROM access_token t WHERE t.user_id = u.id AND t.token=?1)",nativeQuery = true)
+    User findByToken(String token);
 
 }

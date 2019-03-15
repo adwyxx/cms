@@ -8,7 +8,7 @@ package com.adwyxx.cms.model;
 public enum ResponseStatus {
     TEST(1,"test"),
     SUCCESS(200, "请求成功"),
-    LOGIN_FAIL(401, "登录失败"),
+    UNAUTHORIZED(401, "登录失败"),
     LOGOUT_SUCCESS(104,"登出成功"),
     USER_NOT_FOUND(102,"未注册用户"),
     USER_DISABLED(103,"无效用户"),

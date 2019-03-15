@@ -1,21 +1,19 @@
 import axios from 'axios'
 import { Message, Loading } from 'element-ui'
+import Auth from '@/assets/auth'
+import basicConfig from '@/assets/basic-config'
 // import qs from 'qs'
 
 let loadingInstance
-
+const SUCCESS_STATUS = 'OK'
 /**
  * 请求拦截器
  */
 axios.interceptors.request.use(
   function (config) {
-    if (sessionStorage.getItem('PER_USERNAME')) {
-      config.headers = {
-        clientCode: 'CMSClient',
-        clientVersion: 'cms_v1.0',
-        userName: sessionStorage.getItem('PER_USERNAME') || '',
-        certifacte: sessionStorage.getItem('PER_TOKEN') || ''
-      }
+    // 如果已登录，在请求头中加入token
+    if (Auth.getToken()) {
+      config.headers.Authorization = Auth.getToken()
     }
     return config
   },
@@ -29,6 +27,10 @@ axios.interceptors.request.use(
  */
 axios.interceptors.response.use(
   function (response) {
+    // 判断如果认证失败则跳转到登录页面
+    if (response.statusCode === 401) {
+      top.location.href = basicConfig.host + '/login'
+    }
     return response
   },
   function (error) {
@@ -62,7 +64,7 @@ export function post (url, params, hideErrorMsg) {
       .then(response => {
         closeLoading()
         response = response.data
-        if (response && response.status === 'SUCCESS') {
+        if (response && response.status === SUCCESS_STATUS) {
           resolve(response.data)
         } else {
           console.log(response)
@@ -102,7 +104,7 @@ export function formPost (url, formData, hideErrorMsg) {
       .then(response => {
         closeLoading()
         response = response.data
-        if (response && response.status === 'SUCCESS') {
+        if (response && response.status === SUCCESS_STATUS) {
           resolve(response.data)
         } else {
           console.log(response)
@@ -138,7 +140,7 @@ export function get (url, params, hideErrorMsg) {
       .then(response => {
         closeLoading()
         response = response.data
-        if (response && response.status === 'SUCCESS') {
+        if (response && response.status === SUCCESS_STATUS) {
           resolve(response.data)
         } else {
           console.log(response)

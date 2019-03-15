@@ -16,12 +16,10 @@
         </el-menu-item>
       </el-menu>
       <el-menu class="el-menu-vertical"
-               @open="handleOpen"
-               @close="handleClose"
                text-color="#fff"
                active-text-color="#0098fc">
         <el-submenu v-for="menu in proviliges"
-                    :index="menu.id"
+                    :index="menu.id+''"
                     :key="menu.id">
           <template slot="title">
             <i class="el-icon-setting"></i>
@@ -48,7 +46,7 @@
                   style="text-align:right;">
             <el-dropdown placement="top">
               <span class="el-dropdown-link">
-                admin<i class="el-icon-arrow-down el-icon--right"></i>
+                {{userInfo.name}}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>修改密码</el-dropdown-item>
@@ -67,17 +65,20 @@
 
 <script>
 import DateTimeFormater from '@/utils/dateTimeFormater'
+import * as authApi from '@/api/authapi'
 
 export default {
   name: 'Management',
   data () {
     return {
       currentTime: new Date(),
-      proviliges: []
+      proviliges: [],
+      userInfo: {}
     }
   },
   created () {
     this.getData()
+    this.getUser()
   },
   methods: {
     getData () {
@@ -102,11 +103,16 @@ export default {
       }]
       this.proviliges = provis
     },
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
+    // handleOpen (key, keyPath) {
+    //   console.log(key, keyPath)
+    // },
+    // handleClose (key, keyPath) {
+    //   console.log(key, keyPath)
+    // },
+    getUser () {
+      authApi.userInfo().then(response => {
+        this.userInfo = response
+      })
     }
   },
   filters: {

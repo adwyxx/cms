@@ -6,6 +6,7 @@ import com.adwyxx.cms.model.ResponseStatus;
 import com.adwyxx.cms.repositories.AttachmentRespository;
 import com.adwyxx.cms.services.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -96,7 +97,7 @@ public class FileServiceImpl implements FileService {
         //判断文件是否为空
         if (file.isEmpty()) {
             model.setMessage("上传文件为空");
-            model.setStatus(ResponseStatus.SYSTEM_ERROR);
+            model.setStatus(HttpStatus.BAD_REQUEST);
             return model;
         }
 
@@ -106,7 +107,7 @@ public class FileServiceImpl implements FileService {
             model.setMessage(attachment.getFileName()+"上传成功");
             model.setData(attachment);
         } catch (IOException e) {
-            model.setStatus(ResponseStatus.SYSTEM_ERROR);
+            model.setStatus(HttpStatus.BAD_REQUEST);
             model.setMessage(file.getOriginalFilename()+"上传失败："+e.getMessage());
         }
         return model;

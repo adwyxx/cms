@@ -16,6 +16,6 @@ import java.io.Serializable;
 @Repository
 public interface AccessTokenRespository  extends JpaRepository<AccessToken, String>, JpaSpecificationExecutor, Serializable {
 
-    @Query(value = "SELECT TOP 1 * FROM access_token WHERE user_id=?1", nativeQuery = true)
-    public AccessToken getTokenByUserId(int userId);
+    @Query(value = "SELECT * FROM access_token WHERE user_id=?1", nativeQuery = true)
+    AccessToken getTokenByUserId(int userId);
 }

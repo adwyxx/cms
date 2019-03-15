@@ -31,8 +31,9 @@ config.api = {
     fileUpload: config.host + '/file/upload',
     fileDownload: config.host + '/file/download/' // /file/download/{id}
   },
-  common: {
-    login: config.host + '/common/login'
+  auth: {
+    login: config.host + '/auth/login',
+    userInfo: config.host + '/auth/userinfo'
   }
 }
 

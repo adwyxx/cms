@@ -1,5 +1,7 @@
 package com.adwyxx.cms.model;
 
+import org.springframework.http.HttpStatus;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Locale;
@@ -13,7 +15,7 @@ import java.util.Map;
 public class ResponseModel implements Serializable {
     private static final long serialVersionUID = 7788978918244491761L;
 
-    private ResponseStatus status;
+    private HttpStatus status;
 
     private String message;
 
@@ -21,14 +23,16 @@ public class ResponseModel implements Serializable {
 
     private Locale locale;
 
+    private int statusCode;
+
     public ResponseModel(){
-        this.status = ResponseStatus.SUCCESS;
+        this.status = HttpStatus.OK;
         this.locale = Locale.CHINA;
     }
 
     public ResponseModel(Object data){
         this.data=data;
-        this.status = ResponseStatus.SUCCESS;
+        this.status =  HttpStatus.OK;
         this.locale = Locale.CHINA;
     }
 
@@ -50,7 +54,7 @@ public class ResponseModel implements Serializable {
         return this;
     }
 
-    public ResponseModel setStatus(ResponseStatus status) {
+    public ResponseModel setStatus(HttpStatus status) {
         this.status = status;
         return this;
     }
@@ -59,10 +63,15 @@ public class ResponseModel implements Serializable {
         return this;
     }
 
-    public ResponseStatus getStatus() {
+    public HttpStatus getStatus() {
         return status;
     }
     public String getMessage(){
         return message;
+    }
+
+    public int getStatusCode() {
+        statusCode=this.status.value();
+        return statusCode;
     }
 }

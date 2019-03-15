@@ -26,4 +26,6 @@ public interface UserService {
 
     AccessToken longOn(User user);
 
+    User findByToken(String token);
+
 }
