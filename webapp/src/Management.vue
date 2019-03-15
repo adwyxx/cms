@@ -20,16 +20,16 @@
                @close="handleClose"
                text-color="#fff"
                active-text-color="#0098fc">
-        <el-submenu v-for="(menu,index) in proviliges"
-                    :index="index+''"
+        <el-submenu v-for="menu in proviliges"
+                    :index="menu.id"
                     :key="menu.id">
           <template slot="title">
             <i class="el-icon-setting"></i>
             <span>{{menu.name}}</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item v-for="(item,itme_index) in menu.children"
-                          :index="itme_index+''"
+            <el-menu-item v-for="item in menu.children"
+                          :index="menu.id+'-'+item.id"
                           :key="item.id">
               <i class="el-icon-menu"></i>
               <router-link :to="item.route">{{ item.name }}</router-link>
@@ -46,7 +46,7 @@
                   style="text-align:left;"> <i class="el-icon-time"></i>{{currentTime | foramteCnDate}}</el-col>
           <el-col :span="8"
                   style="text-align:right;">
-            <el-dropdown>
+            <el-dropdown placement="top">
               <span class="el-dropdown-link">
                 admin<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
@@ -96,8 +96,8 @@ export default {
         route: '',
         class: 'el-icon-setting',
         children: [
-          { id: 21, name: '文章类别管理', route: '/management/articlecategory', class: 'el-icon-setting' },
-          { id: 22, name: '文章管理', route: '/management/article', class: 'el-icon-setting' }
+          { id: 22, name: '文章管理', route: '/management/article', class: 'el-icon-setting' },
+          { id: 21, name: '文章类别管理', route: '/management/articlecategory', class: 'el-icon-setting' }
         ]
       }]
       this.proviliges = provis

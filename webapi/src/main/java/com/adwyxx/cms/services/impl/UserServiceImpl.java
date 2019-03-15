@@ -1,13 +1,16 @@
 package com.adwyxx.cms.services.impl;
 
+import com.adwyxx.cms.entities.AccessToken;
 import com.adwyxx.cms.entities.User;
 import com.adwyxx.cms.model.PaginationDataModel;
 import com.adwyxx.cms.repositories.UserRepository;
+import com.adwyxx.cms.services.TokenService;
 import com.adwyxx.cms.services.UserService;
 import com.adwyxx.cms.utils.EntityManagerHelper;
 import com.adwyxx.cms.utils.Md5Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -25,8 +28,11 @@ public class UserServiceImpl implements UserService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
+    private TokenService tokenService;
+
     @Override
-    public User getByID(Integer id) {
+    public User getByID(int id) {
         return userRepository.getOne(id);
     }
 
@@ -52,13 +58,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(int id) {
         userRepository.deleteById(id);
     }
 
     @Override
     public boolean checkLogonName(String logonName) {
-        Integer count = userRepository.checkLogonName(logonName);
+        int count = userRepository.checkLogonName(logonName);
         return count>0;
     }
 
@@ -115,5 +121,22 @@ public class UserServiceImpl implements UserService {
         result.setTotal(count);
         entityManager.close();
         return result;
+    }
+
+    @Override
+    public AccessToken longOn(User user) {
+        AccessToken token = tokenService.getTokenByUserId(user.getId());
+        //判断当前Token是否有效
+        if (token != null && !token.isExpired()) {
+            return token;
+        } else {
+            //删除过期的Token
+            if (token != null) {
+                tokenService.deleteById(token.getId());
+            }
+            //生成新的Token
+            token = tokenService.generateAcceseToken(user.getId(), "cms");
+            return token;
+        }
     }
 }

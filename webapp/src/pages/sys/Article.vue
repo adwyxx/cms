@@ -320,7 +320,7 @@ export default {
       })
     },
     reset () {
-      this.$refs['form'].resetFields()
+      // this.$refs['form'].resetFields()
       this.dialogFormVisible = false
     },
     // 准备编辑器

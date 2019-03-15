@@ -115,7 +115,7 @@ public class FileServiceImpl implements FileService {
     /**
     * @description :多文件上传
     * @param  files:文件集合
-    * @param filePath :文件保存到服务器的路径
+     * @param filePath :文件保存到服务器的路径说
     * @param downloadUrl :下载链接域名地址
     * @author : Leo.W
     * @date : 2019/3/13 17:22

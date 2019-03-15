@@ -68,7 +68,7 @@ export function post (url, params, hideErrorMsg) {
           console.log(response)
           if (!hideErrorMsg) {
             Message({
-              message: `${response.messages}`,
+              message: `${response.message}`,
               type: 'error',
               duration: 3 * 1000
             })
@@ -89,7 +89,46 @@ export function post (url, params, hideErrorMsg) {
       })
   })
 }
-
+// 表单 post 请求
+export function formPost (url, formData, hideErrorMsg) {
+  showLoading()
+  return new Promise((resolve, reject) => {
+    axios
+      .post(url, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(response => {
+        closeLoading()
+        response = response.data
+        if (response && response.status === 'SUCCESS') {
+          resolve(response.data)
+        } else {
+          console.log(response)
+          if (!hideErrorMsg) {
+            Message({
+              message: `${response.message}`,
+              type: 'error',
+              duration: 3 * 1000
+            })
+          }
+        }
+      })
+      .catch(error => {
+        closeLoading()
+        if (!hideErrorMsg) {
+          Message({
+            message: error.Message,
+            type: 'error',
+            duration: 3 * 1000
+          })
+        }
+        console.log(error)
+        reject(error)
+      })
+  })
+}
 // http get 请求
 export function get (url, params, hideErrorMsg) {
   showLoading()
@@ -105,7 +144,7 @@ export function get (url, params, hideErrorMsg) {
           console.log(response)
           if (!hideErrorMsg) {
             Message({
-              message: `${response.messages}`,
+              message: `${response.message}`,
               type: 'error',
               duration: 3 * 1000
             })

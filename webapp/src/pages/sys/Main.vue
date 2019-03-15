@@ -8,16 +8,16 @@
                @close="handleClose"
                text-color="#fff"
                active-text-color="#0098fc">
-        <el-submenu v-for="(menu,index) in proviliges"
-                    :index="index+''"
+        <el-submenu v-for="menu in proviliges"
+                    :index="menu.id"
                     :key="menu.id">
           <template slot="title">
             <i class="el-icon-setting"></i>
             <span>{{menu.name}}</span>
           </template>
           <el-menu-item-group>
-            <el-menu-item v-for="(item,itme_index) in menu.children"
-                          :index="itme_index+''"
+            <el-menu-item v-for="item in menu.children"
+                          :index="menu.id+'-'+item.id"
                           :key="item.id">
               <i class="el-icon-menu"></i>
               <router-link :to="item.route">{{ item.name }}</router-link>
@@ -153,26 +153,7 @@ export default {
   },
   methods: {
     getData () {
-      var provis = [{
-        id: 1,
-        name: '系统管理',
-        route: '',
-        class: 'el-icon-setting',
-        children: [
-          { id: 11, name: '用户管理', route: '/managment/user', class: 'el-icon-setting' },
-          { id: 12, name: '角色管理', route: '/managment/role', class: 'el-icon-setting' }
-        ]
-      }, {
-        id: 2,
-        name: '文章管理',
-        route: '',
-        class: 'el-icon-setting',
-        children: [
-          { id: 21, name: '文章类别管理', route: '/managment/articlecategory', class: 'el-icon-setting' },
-          { id: 22, name: '文章管理', route: '/managment/articles', class: 'el-icon-setting' }
-        ]
-      }]
-      this.proviliges = provis
+
     },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)

@@ -30,6 +30,9 @@ config.api = {
     // 文件上传下载
     fileUpload: config.host + '/file/upload',
     fileDownload: config.host + '/file/download/' // /file/download/{id}
+  },
+  common: {
+    login: config.host + '/common/login'
   }
 }
 

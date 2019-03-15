@@ -21,6 +21,9 @@
   </div>
 </template>
 <script>
+import * as commonApi from '@/api/commonapi'
+import { Message } from 'element-ui'
+
 export default {
   data () {
     return { username: '', password: '' }
@@ -28,8 +31,16 @@ export default {
   methods: {
     login () {
       if (this.username !== '' && this.password !== '') {
-        this.$post('', this.data).then(response => {
-          this.$router.push({ path: '/management' })
+        commonApi.login(this.username, this.password).then(response => {
+          if (response.status === 'SUCCESS') {
+            this.$router.push({ path: '/management' })
+          } else {
+            Message({
+              message: response.message,
+              type: 'error',
+              duration: 3 * 1000
+            })
+          }
         })
       }
     }

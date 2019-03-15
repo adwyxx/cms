@@ -23,13 +23,13 @@ public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecif
 
     @Query(value = "UPDATE users SET password=?1 WHERE id=?2", nativeQuery = true)
     @Modifying
-    public void updatePassword(String password,Integer id);
+    public void updatePassword(String password, int id);
 
     @Query(value = "SELECT * FROM users WHERE logon_name=?1 AND password=?2", nativeQuery = true)
     public List<User> getByLogonNameAndPassword(String logonName, String password);
 
     @Query(value = "SELECT COUNT(id) FROM users WHERE logon_name=?1", nativeQuery = true)
-    public Integer checkLogonName(String logonName);
+    public int checkLogonName(String logonName);
 
     @Query(value = "SELECT * FROM users WHERE logon_name=?1",nativeQuery = true)
     public  User getByLogonName(String userName);
@@ -37,6 +37,6 @@ public interface UserRepository extends JpaRepository<User, Integer> , JpaSpecif
     @Modifying
     @Transactional
     @Query(value = "UPDATE users SET display_name=?2,logon_name=?3,email=?4,mobile=?5 WHERE id=?1", nativeQuery = true)
-    public void updateUser(Integer id,String displayName,String logonName,String email,String mobile);
+    public void updateUser(int id, String displayName, String logonName, String email, String mobile);
 
 }

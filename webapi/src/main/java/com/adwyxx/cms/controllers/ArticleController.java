@@ -24,6 +24,7 @@ public class ArticleController {
 
     @RequestMapping(path="/add",method = RequestMethod.POST)
     public void add(@RequestBody Article data) {
+        //data.setContent(StringEscapeUtils.escapeHtml4(data.getContent()));
         service.add(data);
     }
 

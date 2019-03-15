@@ -1,5 +1,6 @@
 package com.adwyxx.cms.services;
 
+import com.adwyxx.cms.entities.AccessToken;
 import com.adwyxx.cms.entities.User;
 import com.adwyxx.cms.model.PaginationDataModel;
 
@@ -9,18 +10,20 @@ import java.util.Map;
 
 public interface UserService {
 
-    public User getByID(Integer id);
+    User getByID(int id);
 
-    public User insert(User user) throws NoSuchAlgorithmException, UnsupportedEncodingException;
+    User insert(User user) throws NoSuchAlgorithmException, UnsupportedEncodingException;
 
-    public void Save(User user);
+    void Save(User user);
 
-    public User getByLogonNameAndPassword(String logonName,String password);
+    User getByLogonNameAndPassword(String logonName, String password);
 
-    public void deleteById(Integer id);
+    void deleteById(int id);
 
-    public boolean checkLogonName(String logonName);
+    boolean checkLogonName(String logonName);
 
-    public PaginationDataModel<User> getPagingData(Map<String,Object> condition);
+    PaginationDataModel<User> getPagingData(Map<String, Object> condition);
+
+    AccessToken longOn(User user);
 
 }
