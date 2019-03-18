@@ -78,6 +78,11 @@ public class ArticleServiceImpl implements ArticleService {
             whereSql.append(" AND title=:title ");
             params.put("title",condition.get("title"));
         }
+        if(condition.containsKey("categoryId") && null != condition.get("categoryId") && !condition.get("categoryId").equals("")){
+            whereSql.append(" AND categoryId=:categoryId ");
+            int categoryId = Integer.parseInt(condition.get("categoryId").toString());
+            params.put("categoryId",categoryId);
+        }
 
         String countSql = countSelectSql.append(whereSql).toString();
         Query countQuery = this.entityManager.createQuery(countSql,Long.class);
@@ -134,5 +139,10 @@ public class ArticleServiceImpl implements ArticleService {
             nodes.add(node);
         }
         return nodes;
+    }
+
+    @Override
+    public Article findById(long id) {
+        return respository.getOne(id);
     }
 }

@@ -20,10 +20,21 @@ public class Menu extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id",nullable = false)
-    private Integer id;
+    private int id;
+
+    @Column(name="parent_id",nullable = false)
+    private int parentId;
 
     @Column(name="name",nullable = false)
     private String name;
-    @Column(name="url",nullable = false)
-    private String url;
+
+    @Column(name="route",nullable = false)
+    private String route;
+
+    @Column(name="icon_class",nullable = false)
+    private String iconClass;
+
+    @Column(name="sort_no",nullable = false)
+    private int sortNo;
+
 }

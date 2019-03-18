@@ -77,31 +77,16 @@ export default {
     }
   },
   created () {
-    this.getData()
     this.getUser()
   },
   methods: {
-    getData () {
-      var provis = [{
-        id: 1,
-        name: '系统管理',
-        route: '',
-        class: 'el-icon-setting',
-        children: [
-          { id: 11, name: '用户管理', route: '/management/user', class: 'el-icon-setting' },
-          { id: 12, name: '角色管理', route: '/management/role', class: 'el-icon-setting' }
-        ]
-      }, {
-        id: 2,
-        name: '文章管理',
-        route: '',
-        class: 'el-icon-setting',
-        children: [
-          { id: 22, name: '文章管理', route: '/management/article', class: 'el-icon-setting' },
-          { id: 21, name: '文章类别管理', route: '/management/articlecategory', class: 'el-icon-setting' }
-        ]
-      }]
-      this.proviliges = provis
+    getProviliges () {
+      this.proviliges = []
+      if (this.userInfo) {
+        authApi.userProviliges(this.userInfo.id).then(response => {
+          this.proviliges = response
+        })
+      }
     },
     // handleOpen (key, keyPath) {
     //   console.log(key, keyPath)
@@ -112,6 +97,7 @@ export default {
     getUser () {
       authApi.userInfo().then(response => {
         this.userInfo = response
+        this.getProviliges()
       })
     }
   },

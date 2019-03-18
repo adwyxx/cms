@@ -38,16 +38,6 @@ public class ArticleController {
         service.deleteById(id);
     }
 
-    @RequestMapping(path="/getTopArticles/{topNum}",method = RequestMethod.POST)
-    public List<Article> getTopArticles(@PathVariable("topNum") int topNum) {
-        return service.getTopArticles(topNum);
-    }
-
-    @RequestMapping(path="/getTopArticlesByCategory/{categoryId}/{topNum}",method = RequestMethod.POST)
-    public List<Article> getTopArticlesByCategory(@PathVariable("categoryId") int categoryId, @PathVariable("topNum") int topNum) {
-        return service.getTopArticlesByCategory(categoryId,topNum);
-    }
-
     @RequestMapping(path="/query",method = RequestMethod.POST)
     public PaginationDataModel<Article> getPagingData(@RequestBody Map<String, Object> condition) {
         return service.getPagingData(condition);

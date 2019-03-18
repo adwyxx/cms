@@ -2,8 +2,10 @@ package com.adwyxx.cms.controllers;
 
 import com.adwyxx.cms.entities.AccessToken;
 import com.adwyxx.cms.entities.User;
+import com.adwyxx.cms.model.MenuModel;
 import com.adwyxx.cms.model.ResponseModel;
 import com.adwyxx.cms.model.ResponseStatus;
+import com.adwyxx.cms.services.MenuService;
 import com.adwyxx.cms.services.UserService;
 import com.adwyxx.cms.utils.Md5Helper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +29,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private MenuService menuService;
 
     @PostMapping("/login")
     public ResponseModel login(@RequestParam("username") String username, @RequestParam("password")String password)
@@ -109,5 +115,11 @@ public class AuthController {
             model.setMessage(e.getMessage());
         }
         return model;
+    }
+
+    @GetMapping("/proviliges/{userId}")
+    public List<MenuModel> getUserProviliges(@PathVariable("userId") int userId)
+    {
+        return menuService.getUserProviliges(userId);
     }
 }

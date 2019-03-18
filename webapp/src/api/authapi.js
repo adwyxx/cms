@@ -12,3 +12,7 @@ export function login (name, pass) {
 export function userInfo () {
   return Request.get(config.api.auth.userInfo)
 }
+// 获取用户权限
+export function userProviliges (userId) {
+  return Request.get(config.api.auth.userProviliges + userId)
+}

@@ -26,4 +26,6 @@ public interface ArticleService {
     PaginationDataModel<Article> getPagingData(Map<String, Object> condition);
 
     List<TreeNode> getAllCategories();
+
+    Article findById(long id);
 }

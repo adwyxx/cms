@@ -33,7 +33,15 @@ config.api = {
   },
   auth: {
     login: config.host + '/auth/login',
-    userInfo: config.host + '/auth/userinfo'
+    userInfo: config.host + '/auth/userinfo',
+    userProviliges: config.host + '/auth/proviliges/'
+  },
+  news: {
+    news: config.host + '/news/news/', // /news/{id}
+    topAllNews: config.host + '/news/topallnews/', // /topallnews/{topNum}
+    topCategoryNews: config.host + '/news/topcategorynews/', // /topcategorynews/{categoryId}/{topNum}
+    categories: config.host + '/news/categories',
+    query: config.host + '/news/query'
   }
 }
 
