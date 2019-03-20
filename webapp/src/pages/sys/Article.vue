@@ -363,6 +363,4 @@ export default {
     }
   }
 }
-
-// 图片上传实现 https://segmentfault.com/a/1190000012620431
 </script>

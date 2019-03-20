@@ -22,16 +22,20 @@
         </el-col>
       </el-row>
     </el-main>
+    <el-footer>
+      <site-foot></site-foot>
+    </el-footer>
   </el-container>
 </template>
 <script>
 import DateTimeFormater from '@/utils/dateTimeFormater'
 import SiteHead from '@/components/SiteHead'
+import SiteFoot from '@/components/SiteFoot'
 import * as newsApi from '@/api/newsapi'
 
 export default {
   name: 'News',
-  components: { SiteHead },
+  components: { SiteHead, SiteFoot },
   data () {
     return {
       news: { title: null, content: null, author: null, createTime: null }

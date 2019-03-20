@@ -1,5 +1,6 @@
 <template>
-  <el-container>
+  <el-container style="height:100%;min-height:900px;"
+                direction="vertical">
     <el-header>
 
       <site-head></site-head>
@@ -10,9 +11,9 @@
                 style="height:30px;">
           <el-breadcrumb separator-class="el-icon-arrow-right">
             <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-            <el-breadcrumb-item>活动列表</el-breadcrumb-item>
-            <el-breadcrumb-item>活动详情</el-breadcrumb-item>
+            <el-breadcrumb-item v-for="item in categories"
+                                :key="item.id"
+                                :to="{ path: item.path }">{{item.name}}</el-breadcrumb-item>
           </el-breadcrumb>
         </el-col>
       </el-row>
@@ -73,20 +74,27 @@
                      :total="total">
       </el-pagination>
     </el-main>
+    <el-footer>
+      <site-foot></site-foot>
+    </el-footer>
   </el-container>
 </template>
 <script>
 import SiteHead from '@/components/SiteHead'
+import SiteFoot from '@/components/SiteFoot'
 import * as newsApi from '@/api/newsapi'
+import basicConfig from '@/assets/basic-config'
 
 export default {
   name: 'NewsList',
-  components: { SiteHead },
+  components: { SiteHead, SiteFoot },
   data () {
     return {
       dataList: [],
+      categories: [],
       condition: { categoryId: null, title: null, pageSize: 10, pageIndex: 1 },
-      total: 0
+      total: 0,
+      newsUrl: basicConfig.host + '/#/news/'
     }
   },
   created () {
@@ -94,6 +102,7 @@ export default {
       this.condition.categoryId = this.$route.params.categoryId
     }
     this.getData()
+    this.getPath()
   },
   methods: {
     getData () {
@@ -103,7 +112,21 @@ export default {
       })
     },
     showNews (id) {
-      top.open('http://localhost:8010/#/news/' + id)
+      top.open(this.newsUrl + id)
+    },
+    getPath () {
+      if (this.$route.params && this.$route.params.categoryId) {
+        newsApi.categoryPath(this.$route.params.categoryId).then((response) => {
+          if (response) {
+            this.categories = []
+            for (let i = 0, len = response.length; i < len; i++) {
+              this.categories.push({ id: response[i].id, name: response[i].name, path: '/newslist/' + response[i].id })
+            }
+          }
+        })
+      } else {
+        this.categories = [{ id: 0, name: '全部新闻', path: '/newslist' }]
+      }
     }
   }
 }

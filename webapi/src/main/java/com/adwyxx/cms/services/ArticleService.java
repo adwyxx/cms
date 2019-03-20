@@ -1,6 +1,7 @@
 package com.adwyxx.cms.services;
 
 import com.adwyxx.cms.entities.Article;
+import com.adwyxx.cms.entities.ArticleCategory;
 import com.adwyxx.cms.model.PaginationDataModel;
 import com.adwyxx.cms.model.TreeNode;
 
@@ -28,4 +29,8 @@ public interface ArticleService {
     List<TreeNode> getAllCategories();
 
     Article findById(long id);
+
+    List<ArticleCategory> getCurrentAndParents(int id);
+
+    List<ArticleCategory> getCurrentAndChildren(int id);
 }

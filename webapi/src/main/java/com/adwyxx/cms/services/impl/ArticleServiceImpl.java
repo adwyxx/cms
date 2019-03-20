@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,37 +64,47 @@ public class ArticleServiceImpl implements ArticleService {
     public PaginationDataModel<Article> getPagingData(Map<String, Object> condition) {
         PaginationDataModel<Article> result = new PaginationDataModel<Article> ();
 
-        StringBuilder countSelectSql = new StringBuilder();
-        //注意：这里的SQL语句User并不是表，而是表对应的实体
-        countSelectSql.append("SELECT COUNT(id) FROM Article WHERE 1=1 ");
-
-        StringBuilder selectSql = new StringBuilder();
-        selectSql.append("FROM Article WHERE 1=1 ");
-
+        String sqlStart="SELECT * ";
+        String sqlCountStart="SELECT COUNT(1) ";
+        String sqlEnd="FROM articles WHERE 1=1 ";
+        String sqlOrder ="order by create_time desc";
         Map<String,Object> params = new HashMap<>();
-        StringBuilder whereSql = new StringBuilder();
+
+        // 文章标题模糊查询
         if(condition.containsKey("title") && null != condition.get("title") && !condition.get("title").equals("")){
-            // 注意：条件中的displayName并不是表中的字段，而是User实体的属性字段
-            whereSql.append(" AND title=:title ");
-            params.put("title",condition.get("title"));
+            sqlEnd+="AND title LIKE '%"+condition.get("title")+"%' ";
         }
+        // 文章类别条件
         if(condition.containsKey("categoryId") && null != condition.get("categoryId") && !condition.get("categoryId").equals("")){
-            whereSql.append(" AND categoryId=:categoryId ");
             int categoryId = Integer.parseInt(condition.get("categoryId").toString());
-            params.put("categoryId",categoryId);
+            List<ArticleCategory> categories = this.getCurrentAndChildren(categoryId);
+            if(categories.size()>1)
+            {
+                sqlEnd+="AND category_id IN (";
+                for(int i=0;i<categories.size();i++)
+                {
+                    if(i==0)
+                    {
+                        sqlEnd += Integer.toString(categories.get(i).getId());
+                    }
+                    else {
+                        sqlEnd += ',' + Integer.toString(categories.get(i).getId());
+                    }
+                }
+                sqlEnd+=")";
+            }
+            else
+            {
+                sqlEnd+="AND category_id=:categoryId ";
+                params.put("categoryId",categoryId);
+            }
         }
 
-        String countSql = countSelectSql.append(whereSql).toString();
-        Query countQuery = this.entityManager.createQuery(countSql,Long.class);
-        EntityManagerHelper.setParameters(countQuery,params);
-        Long count = (Long) countQuery.getSingleResult();
+        Query query = this.entityManager.createNativeQuery(sqlStart + sqlEnd + sqlOrder, Article.class);
+        Query queryCount = this.entityManager.createNativeQuery(sqlCountStart + sqlEnd);
 
-        selectSql.append(whereSql);
-        selectSql.append("order by createTime desc");
-        String querySql = selectSql.toString();
-
-        Query query = this.entityManager.createQuery(querySql,Article.class);
         EntityManagerHelper.setParameters(query,params);
+        EntityManagerHelper.setParameters(queryCount,params);
 
         int startIndex =0,pageSize=10;
 
@@ -112,8 +122,9 @@ public class ArticleServiceImpl implements ArticleService {
         query.setFirstResult(startIndex);
         query.setMaxResults(pageSize);
 
+        BigInteger count = (BigInteger)queryCount.getSingleResult();
         result.setData(query.getResultList());
-        result.setTotal(count);
+        result.setTotal(count.longValue());
         entityManager.close();
         return result;
     }
@@ -144,5 +155,29 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public Article findById(long id) {
         return respository.getOne(id);
+    }
+
+    /**
+     * @description :获取当前类别及其父类别
+     * @param id : 当前类别id
+     * @author : Leo.W
+     * @date : 2019/3/20 15:45
+     * @return : 当前类别及其父类别
+     **/
+    @Override
+    public List<ArticleCategory> getCurrentAndParents(int id) {
+        return categoryRepository.getCurrentAndParents(id);
+    }
+
+    /**
+     * @description :获取当前类别及其子类别
+     * @param id : 当前类别id
+     * @author : Leo.W
+     * @date : 2019/3/20 15:45
+     * @return : 当前类别及其子类别
+     **/
+    @Override
+    public List<ArticleCategory> getCurrentAndChildren(int id) {
+        return categoryRepository.getCurrentAndChildren(id);
     }
 }

@@ -41,6 +41,7 @@ config.api = {
     topAllNews: config.host + '/news/topallnews/', // /topallnews/{topNum}
     topCategoryNews: config.host + '/news/topcategorynews/', // /topcategorynews/{categoryId}/{topNum}
     categories: config.host + '/news/categories',
+    categoryPath: config.host + '/news/categorypath/',
     query: config.host + '/news/query'
   }
 }

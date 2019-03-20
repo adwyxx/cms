@@ -20,6 +20,10 @@ export function topCategoryNews (categoryId, topNum) {
     config.api.news.topcategorynews + categoryId + '/' + topNum
   )
 }
+// 获取文章类别机器父类别
+export function categoryPath (id) {
+  return Request.get(config.api.news.categoryPath + id)
+}
 
 // 获取文章分类下最新的几条信息
 export function query (condition) {

@@ -1,6 +1,7 @@
 package com.adwyxx.cms.controllers;
 
 import com.adwyxx.cms.entities.Article;
+import com.adwyxx.cms.entities.ArticleCategory;
 import com.adwyxx.cms.model.PaginationDataModel;
 import com.adwyxx.cms.model.TreeNode;
 import com.adwyxx.cms.services.ArticleService;
@@ -41,6 +42,12 @@ public class NewsController  {
     public List<TreeNode> getAllCategories()
     {
         return service.getAllCategories();
+    }
+
+    @GetMapping("/categorypath/{id}")
+    public List<ArticleCategory> getCategoryPath(@PathVariable("id") int id)
+    {
+        return service.getCurrentAndParents(id);
     }
 
     @PostMapping("/query")
