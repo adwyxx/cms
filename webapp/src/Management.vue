@@ -8,7 +8,7 @@
                background-color="#0f2448">
         <el-menu-item index="0"
                       style="color:#0098fc;">
-          <i class="el-icon-star-off"
+          <i class="fa fa-home fa-lg"
              style="color:#0098fc;"></i>
           <router-link :to="{name:'Welcome'}"
                        slot="title"
@@ -22,14 +22,14 @@
                     :index="menu.id+''"
                     :key="menu.id">
           <template slot="title">
-            <i class="el-icon-setting"></i>
+            <i :class="menu.iconClass"></i>
             <span>{{menu.name}}</span>
           </template>
           <el-menu-item-group>
             <el-menu-item v-for="item in menu.children"
                           :index="menu.id+'-'+item.id"
                           :key="item.id">
-              <i class="el-icon-menu"></i>
+              <i :class="item.iconClass"></i>
               <router-link :to="item.route">{{ item.name }}</router-link>
             </el-menu-item>
           </el-menu-item-group>

@@ -18,4 +18,8 @@ export default {
   text-align: center;
   color: #2c3e50;
 }
+.el-container {
+  max-width: 1600px;
+  margin: auto;
+}
 </style>

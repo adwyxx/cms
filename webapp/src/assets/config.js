@@ -43,6 +43,9 @@ config.api = {
     categories: config.host + '/news/categories',
     categoryPath: config.host + '/news/categorypath/',
     query: config.host + '/news/query'
+  },
+  index: {
+    carousel: config.host + '/index/carousel/' // /carousel/{topNum}
   }
 }
 

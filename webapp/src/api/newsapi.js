@@ -29,3 +29,7 @@ export function categoryPath (id) {
 export function query (condition) {
   return Request.post(config.api.news.query, condition)
 }
+// 获取文章分类下最新的几条信息
+export function carousel (topNum) {
+  return Request.get(config.api.index.carousel + topNum)
+}
