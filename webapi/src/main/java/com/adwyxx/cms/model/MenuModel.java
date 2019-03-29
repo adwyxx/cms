@@ -20,17 +20,15 @@ public class MenuModel implements Serializable {
     private String route;
     private List<MenuModel> children;
 
-    public MenuModel()
-    {
+    public MenuModel() {
         this.children = new ArrayList<>();
     }
 
-    public MenuModel(int id,String name,String iconClass,String route)
-    {
-        this.id=id;
-        this.name=name;
-        this.iconClass=iconClass;
-        this.route=route;
+    public MenuModel(int id, String name, String iconClass, String route) {
+        this.id = id;
+        this.name = name;
+        this.iconClass = iconClass;
+        this.route = route;
         this.children = new ArrayList<>();
     }
 }

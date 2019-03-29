@@ -17,6 +17,7 @@ import javax.persistence.Query;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @Description:
@@ -132,23 +133,19 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<TreeNode> getAllCategories() {
         List<ArticleCategory> categories = categoryRepository.findAll();
-        List<ArticleCategory> roots = categories.stream()
-                .filter(p -> p.getParentId()==0)
-                .sorted((c1,c2) -> (c1.getSortNo()-c2.getSortNo()))
-                .collect(Collectors.toList());
+        List<ArticleCategory> roots = categories.stream().filter(p -> p.getParentId()==0)
+                                            .sorted(Comparator.comparingInt(ArticleCategory::getSortNo))
+                                            .collect(Collectors.toList());
 
         List<TreeNode> nodes = new ArrayList<>();
-        for(Iterator<ArticleCategory> iter = roots.iterator();iter.hasNext();)
-        {
-            ArticleCategory category = iter.next();
-            TreeNode node = new TreeNode(category.getId(),category.getName(),category.getFullName());
-            List<ArticleCategory> children = categories.stream()
-                    .filter(c -> c.getParentId()==category.getId())
-                    .sorted((c1,c2) -> (c1.getSortNo()-c2.getSortNo()))
+        roots.forEach(root->{
+            TreeNode node = new TreeNode(root.getId(),root.getName(),root.getFullName());
+            List<ArticleCategory> children =categories.stream().filter(c -> c.getParentId()==root.getId())
+                    .sorted(Comparator.comparingInt(ArticleCategory::getSortNo))
                     .collect(Collectors.toList());
             children.forEach(c -> node.addChild(new TreeNode(c.getId(),c.getName(),c.getFullName())));
             nodes.add(node);
-        }
+        });
         return nodes;
     }
 
